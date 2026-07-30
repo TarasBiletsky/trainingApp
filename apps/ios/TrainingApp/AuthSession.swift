@@ -35,6 +35,11 @@ final class AuthSession: ObservableObject {
         return try await client(baseURL).bootstrap(accessToken: token)
     }
 
+    func get<Response: Decodable>(_ path: String, baseURL: String) async throws -> Response {
+        let token = try await validAccessToken(baseURL: baseURL)
+        return try await client(baseURL).get(path, accessToken: token)
+    }
+
     func send(_ path: String, method: String, baseURL: String) async throws {
         let token = try await validAccessToken(baseURL: baseURL)
         try await client(baseURL).send(path, method: method, accessToken: token)
