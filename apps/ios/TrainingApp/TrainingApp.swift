@@ -17,7 +17,12 @@ struct TrainingApp: App {
     }
 
     var body: some Scene {
-        WindowGroup { RootView().environmentObject(auth) }
+        WindowGroup {
+            RootView()
+                .environmentObject(auth)
+                .tint(.trainingLime)
+                .preferredColorScheme(.dark)
+        }
             .modelContainer(for: [Workout.self, WorkoutExercise.self, SetEntry.self])
     }
 }

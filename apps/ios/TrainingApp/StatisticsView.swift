@@ -7,8 +7,19 @@ struct StatisticsView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Всего") {
-                    Text(totalVolume, format: .number.precision(.fractionLength(0))) + Text(" кг")
+                Section("Последние 12 недель") {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("ОБЪЁМ").font(.caption2).foregroundStyle(.secondary)
+                            Text(totalVolume, format: .number.precision(.fractionLength(0))) + Text(" кг")
+                        }
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Text("СЕССИИ").font(.caption2).foregroundStyle(.secondary)
+                            Text("\(completedWorkouts)")
+                        }
+                    }
+                    .font(.title2.monospacedDigit().weight(.semibold))
                 }
                 Section("По упражнениям") {
                     ForEach(volumeByExercise, id: \.name) { item in
@@ -20,11 +31,14 @@ struct StatisticsView: View {
                     }
                 }
             }
-            .navigationTitle("Объём")
+            .scrollContentBackground(.hidden)
+            .background(Color.black)
+            .navigationTitle("Progress")
         }
     }
 
     private var totalVolume: Double { volumeByExercise.reduce(0) { $0 + $1.volume } }
+    private var completedWorkouts: Int { workouts.filter { $0.status == .completed }.count }
 
     private var volumeByExercise: [(name: String, volume: Double)] {
         var totals: [String: Double] = [:]

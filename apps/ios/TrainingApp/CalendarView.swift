@@ -35,6 +35,7 @@ struct CalendarView: View {
                 .listStyle(.plain)
             }
             .padding(.horizontal)
+            .background(Color.black)
             .navigationTitle("Календарь")
             .toolbar {
                 Button("Добавить", systemImage: "plus") { addWorkout() }
@@ -68,7 +69,7 @@ struct CalendarView: View {
                             Circle().frame(width: 5, height: 5).opacity(hasWorkout(on: date) ? 1 : 0)
                         }
                         .frame(maxWidth: .infinity, minHeight: 38)
-                        .background(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.accentColor.opacity(0.2) : .clear)
+                        .background(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.trainingLime.opacity(0.18) : Color.trainingPanel)
                         .clipShape(.rect(cornerRadius: 8))
                     }
                     .buttonStyle(.plain)

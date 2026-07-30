@@ -1,6 +1,11 @@
 import SwiftData
 import SwiftUI
 
+extension Color {
+    static let trainingLime = Color(red: 0.78, green: 1, blue: 0.18)
+    static let trainingPanel = Color(red: 0.06, green: 0.075, blue: 0.085)
+}
+
 struct RootView: View {
     @EnvironmentObject private var auth: AuthSession
     @Environment(\.modelContext) private var context
@@ -36,6 +41,8 @@ struct RootView: View {
             StatisticsView()
                 .tabItem { Label("Объём", systemImage: "chart.bar") }
         }
+        .toolbarBackground(Color.black, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
     }
 
     private var todayContent: some View {
@@ -52,7 +59,7 @@ struct RootView: View {
                     }
                 }
             }
-            .navigationTitle("Тренировка")
+            .navigationTitle("LOG SESSION")
             .safeAreaInset(edge: .bottom) {
                 if let syncError {
                     Text(syncError)
@@ -116,6 +123,8 @@ private struct LoginView: View {
                     .disabled(auth.isLoading || userName.isEmpty || password.isEmpty)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color.black)
             .navigationTitle("Training")
         }
     }
@@ -139,6 +148,7 @@ struct WorkoutView: View {
                     workout.updatedAt = .now
                 }
                 .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 7))
             }
 
             ForEach(workout.exercises.sorted(by: { $0.order < $1.order })) { exercise in
@@ -161,8 +171,11 @@ struct WorkoutView: View {
                             + Text(" кг")
                     }
                 }
+                .listRowBackground(Color.trainingPanel)
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.black)
     }
 }
 
@@ -170,7 +183,7 @@ private struct SetRow: View {
     @Bindable var set: SetEntry
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Text("\(set.order + 1)").foregroundStyle(.secondary)
             TextField("кг", value: $set.actualWeightKg, format: .number)
                 .keyboardType(.decimalPad)
@@ -187,8 +200,9 @@ private struct SetRow: View {
                 set.updatedAt = .now
                 set.needsSync = true
             } label: {
-                Image(systemName: set.status == .completed ? "checkmark.circle.fill" : "circle")
+                Image(systemName: set.status == .completed ? "checkmark.square.fill" : "square")
                     .font(.title2)
+                    .foregroundStyle(set.status == .completed ? Color.trainingLime : .secondary)
             }
             .accessibilityLabel("Завершить подход")
         }

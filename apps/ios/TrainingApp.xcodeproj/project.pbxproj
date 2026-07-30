@@ -32,14 +32,14 @@
 		C71CB78867F7CE8A7AFDF569 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		E628B60A3B76423C92A42E12 /* TrainingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingApp.swift; sourceTree = "<group>"; };
 		EB1FF44FBD0F717DD45FE541 /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
-		EBF7E1C17DB237F94282CB7C /* TrainingApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TrainingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBF7E1C17DB237F94282CB7C /* Training.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Training.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		25017FFE3DBF6ECACB3A1366 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EBF7E1C17DB237F94282CB7C /* TrainingApp.app */,
+				EBF7E1C17DB237F94282CB7C /* Training.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,7 +88,7 @@
 			packageProductDependencies = (
 			);
 			productName = TrainingApp;
-			productReference = EBF7E1C17DB237F94282CB7C /* TrainingApp.app */;
+			productReference = EBF7E1C17DB237F94282CB7C /* Training.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,8 +99,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = D3C264A8BBEF58F9A53A5A7F /* Build configuration list for PBXProject "TrainingApp" */;
 			developmentRegion = en;
@@ -148,6 +146,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TrainingApp/TrainingApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = ST2CGVR6X2;
 				INFOPLIST_FILE = TrainingApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -166,6 +165,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TrainingApp/TrainingApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = ST2CGVR6X2;
 				INFOPLIST_FILE = TrainingApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
