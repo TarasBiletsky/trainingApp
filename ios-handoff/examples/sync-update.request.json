@@ -1,10 +1,10 @@
 ﻿[
     {
-        "id":  "efaaba9f-32f9-4842-8e28-7c05dd376221",
-        "workoutExerciseId":  "f256bb0e-6557-4c0d-9abe-e07b8c34787f",
+        "id":  "3c7db718-53ed-4083-91c3-fef8a3f09350",
+        "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
         "expectedVersion":  1,
         "value":  {
-                      "id":  "efaaba9f-32f9-4842-8e28-7c05dd376221",
+                      "id":  "3c7db718-53ed-4083-91c3-fef8a3f09350",
                       "order":  2,
                       "plannedWeightKg":  65,
                       "plannedReps":  5,
@@ -15,7 +15,8 @@
                       "isWarmup":  false,
                       "notes":  "Updated by sync",
                       "version":  1,
-                      "status":  "Completed"
+                      "status":  "Completed",
+                      "completedAt":  "2026-07-30T10:54:09.1427930+00:00"
                   }
     }
 ]

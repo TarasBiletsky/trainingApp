@@ -1,9 +1,9 @@
 ﻿{
-    "id":  "d7b3a042-791d-4e78-b5bf-a12cbf5316b0",
-    "workoutExerciseId":  "f256bb0e-6557-4c0d-9abe-e07b8c34787f",
+    "id":  "57e9ff52-85b2-4e07-bf34-7fedd21e7ca2",
+    "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
     "workoutExercise":  {
-                            "id":  "f256bb0e-6557-4c0d-9abe-e07b8c34787f",
-                            "workoutId":  "190ca938-af9f-4477-a884-02cf69849dcd",
+                            "id":  "81c54541-7d68-4c33-8cba-dbc026d65568",
+                            "workoutId":  "84f482db-a252-4539-9744-45b778ff2a88",
                             "workout":  null,
                             "exerciseId":  "11111111-1111-1111-1111-111111111111",
                             "exercise":  null,
@@ -26,6 +26,6 @@
     "isWarmup":  false,
     "completedAt":  null,
     "notes":  "Direct set endpoint",
-    "updatedAt":  "2026-07-30T10:55:34.6753917+00:00",
+    "updatedAt":  "2026-07-30T11:09:09.5187845+00:00",
     "version":  1
 }

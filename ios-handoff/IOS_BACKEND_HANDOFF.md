@@ -20,7 +20,7 @@ New-NetFirewallRule -DisplayName "Training API TCP 8181 (Private LAN)" -Directio
 
 ## Авторизация
 
-Все прикладные endpoints используют `Authorization: Bearer <accessToken>`, кроме health probes, Swagger, login/register/refresh и Home Assistant endpoint. Login: `POST /auth/login`; refresh: `POST /auth/refresh`; logout: `POST /auth/logout`. Access token живёт 15 минут, refresh token — 30 дней. Каждый успешный refresh ротирует refresh token; старый сразу становится недействительным (401). Logout отзывает переданный refresh token (204), после чего его refresh также даёт 401.
+Все прикладные endpoints используют `Authorization: Bearer <accessToken>`, кроме health probes, Swagger, login, refresh, logout и защищённого отдельным API key Home Assistant endpoint. Публичной регистрации нет. Login: `POST /auth/login`; refresh: `POST /auth/refresh`; logout: `POST /auth/logout`. Access token живёт 15 минут, refresh token — 30 дней. Каждый успешный refresh ротирует refresh token; старый сразу становится недействительным (401). Logout идемпотентно отзывает переданный refresh token без требования действующего access token (204).
 
 На iOS хранить оба токена в Keychain, обновлять access token через single-flight actor, атомарно заменять refresh token и никогда не повторять refresh старым значением. Примеры без настоящих credentials лежат в `examples/auth-*`.
 
@@ -28,7 +28,7 @@ New-NetFirewallRule -DisplayName "Training API TCP 8181 (Private LAN)" -Directio
 
 Точные required/nullable поля, enums, request/response schemas, security и документированные response codes находятся в `openapi.json`. Реальные JSON-примеры находятся в `examples/`.
 
-Реализованы: auth login/register/refresh/logout; users/me и admin user management; exercises CRUD (DELETE архивирует), history, records и library search/import; workouts list/get/create/update, start/complete, добавление exercise, создание/update/complete/skip set, sync; templates list/create/create-workout; health import/daily; export; bootstrap; Home Assistant body measurements; health/live, health/ready и Swagger.
+Реализованы: auth login/refresh/logout; users/me и authenticated admin user management; exercises CRUD (DELETE архивирует), history, records и library search/import; workouts list/get/create/update, start/complete, добавление exercise, создание/update/complete/skip set, sync; templates list/create/create-workout; statistics/volume; health import/daily; export; bootstrap; Home Assistant body measurements; health/live, health/ready и Swagger. Публичного register endpoint нет.
 
 ### Bootstrap
 
@@ -38,7 +38,7 @@ New-NetFirewallRule -DisplayName "Training API TCP 8181 (Private LAN)" -Directio
 
 Клиент генерирует UUID до отправки. Изменяемые Workout и SetEntry используют целочисленный `version`; при обновлении передаётся `expectedVersion`. Даты — ISO-8601 UTC, веса/RPE — decimal.
 
-`POST /workouts/sync` принимает массив `SetSyncCommand` с `id`, `workoutExerciseId`, `expectedVersion`, `value`; результат — массив `{ id, status, version, current }`. Реальные сценарии:
+`POST /workouts/sync` принимает массив `SetSyncCommand` с `id`, `workoutExerciseId`, `expectedVersion`, `value`; `value.completedAt` опционален и передаётся как UTC ISO-8601. Для offline completion клиент передаёт фактическое время; если оно отсутствует, сервер использует текущее UTC. Planned/Skipped очищают `completedAt`. Статистика группирует по времени завершения set, а календарь включает workout по `scheduledAt`. Результат sync — массив `{ id, status, version, current }`. Реальные сценарии:
 
 - `sync-create.request.json` → `sync-create.response.json`: создание set с client UUID, 200.
 - точный повтор того же create → `sync-retry.response.json`: 200 со status `existing` и подтверждённой server version.

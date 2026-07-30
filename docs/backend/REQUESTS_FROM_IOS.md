@@ -1,8 +1,10 @@
-# Backend requests from iOS — follow-up required
+# Backend requests from iOS — completed
 
-Reviewed backend commit `b2c774e` on 2026-07-30. The main feature surface was added and OpenAPI copies are byte-identical, but the items below block reliable offline volume statistics. Do not mark this file completed until these checks pass.
+Follow-up completed on 2026-07-30. Offline completion timestamps are preserved by sync and included in volume statistics; regression coverage increased from 4 to 17 tests; stale handoff statements were removed; runtime OpenAPI copies are byte-identical.
 
-## Open backend follow-up
+Verification: sync create 200, exact retry 200 without changing `completedAt`, update 200, real conflict 409, `OfflineCompletionPreserved = True`, and all LAN/Tailscale health probes 200.
+
+## Completed backend follow-up
 
 ### P0 — synced completed sets disappear from volume statistics
 

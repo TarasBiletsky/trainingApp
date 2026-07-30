@@ -1766,6 +1766,11 @@
           },
           "status": {
             "$ref": "#/components/schemas/SetStatus"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
