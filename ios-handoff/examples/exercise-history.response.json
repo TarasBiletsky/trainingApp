@@ -1,0 +1,59 @@
+{
+    "value":  [
+                  {
+                      "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
+                      "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                      "workoutExercise":  null,
+                      "order":  2,
+                      "status":  "Completed",
+                      "plannedWeightKg":  65,
+                      "plannedReps":  5,
+                      "plannedRpe":  8,
+                      "actualWeightKg":  67.5,
+                      "actualReps":  5,
+                      "actualRpe":  8.5,
+                      "isWarmup":  false,
+                      "completedAt":  null,
+                      "notes":  "Client-generated UUID",
+                      "updatedAt":  "2026-07-30T08:26:39.197143+00:00",
+                      "version":  2
+                  },
+                  {
+                      "id":  "2d790ead-b278-4c70-b158-edb5c28208a9",
+                      "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                      "workoutExercise":  null,
+                      "order":  1,
+                      "status":  "Completed",
+                      "plannedWeightKg":  60,
+                      "plannedReps":  8,
+                      "plannedRpe":  7,
+                      "actualWeightKg":  60,
+                      "actualReps":  8,
+                      "actualRpe":  7.5,
+                      "isWarmup":  false,
+                      "completedAt":  "2026-07-30T08:26:39.012384+00:00",
+                      "notes":  "Completed through set action",
+                      "updatedAt":  "2026-07-30T08:26:39.012385+00:00",
+                      "version":  2
+                  },
+                  {
+                      "id":  "f384e768-ac26-4d70-a105-d006f5b6fdba",
+                      "workoutExerciseId":  "99312fc6-fd96-49a1-a7c1-3342b650710e",
+                      "workoutExercise":  null,
+                      "order":  1,
+                      "status":  "Completed",
+                      "plannedWeightKg":  60,
+                      "plannedReps":  8,
+                      "plannedRpe":  7,
+                      "actualWeightKg":  60,
+                      "actualReps":  8,
+                      "actualRpe":  7.5,
+                      "isWarmup":  false,
+                      "completedAt":  "2026-07-30T08:26:17.130008+00:00",
+                      "notes":  "Completed through set action",
+                      "updatedAt":  "2026-07-30T08:26:17.130052+00:00",
+                      "version":  2
+                  }
+              ],
+    "Count":  3
+}

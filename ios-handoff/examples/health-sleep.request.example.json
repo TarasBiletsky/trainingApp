@@ -1,0 +1,17 @@
+{
+    "value":  [
+                  {
+                      "id":  "\u003cclient-generated-uuid\u003e",
+                      "type":  "sleep",
+                      "startAt":  "2026-07-29T22:30:00Z",
+                      "endAt":  "2026-07-30T06:30:00Z",
+                      "numericValue":  480,
+                      "unit":  "min",
+                      "sourceName":  "Apple Health",
+                      "sourceBundleId":  "com.apple.Health",
+                      "externalId":  "\u003cstable-healthkit-sample-uuid\u003e",
+                      "metadataJson":  "{\"stages\":[{\"stage\":\"asleepCore\",\"minutes\":210},{\"stage\":\"asleepDeep\",\"minutes\":90}]}"
+                  }
+              ],
+    "Count":  1
+}

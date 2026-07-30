@@ -1,0 +1,94 @@
+{
+    "workout":  {
+                    "id":  "a43a19c3-4921-4d3a-9761-de0653e1173e",
+                    "name":  "iOS Handoff Verification",
+                    "scheduledAt":  "2026-07-30T08:26:16.538521+00:00",
+                    "startedAt":  "2026-07-30T08:26:16.968752+00:00",
+                    "completedAt":  null,
+                    "status":  "InProgress",
+                    "notes":  "Verified create and update",
+                    "createdAt":  "2026-07-30T08:26:16.605011+00:00",
+                    "updatedAt":  "2026-07-30T08:26:16.968775+00:00",
+                    "version":  3,
+                    "ownerId":  "253a133a-c0c9-4702-9bf0-6725b98f24ef",
+                    "exercises":  [
+                                      {
+                                          "id":  "99312fc6-fd96-49a1-a7c1-3342b650710e",
+                                          "workoutId":  "a43a19c3-4921-4d3a-9761-de0653e1173e",
+                                          "workout":  null,
+                                          "exerciseId":  "11111111-1111-1111-1111-111111111111",
+                                          "exercise":  null,
+                                          "order":  1,
+                                          "notes":  "Bench Press verification",
+                                          "restSeconds":  90,
+                                          "sets":  [
+                                                       {
+                                                           "id":  "f384e768-ac26-4d70-a105-d006f5b6fdba",
+                                                           "workoutExerciseId":  "99312fc6-fd96-49a1-a7c1-3342b650710e",
+                                                           "workoutExercise":  null,
+                                                           "order":  1,
+                                                           "status":  "Completed",
+                                                           "plannedWeightKg":  60,
+                                                           "plannedReps":  8,
+                                                           "plannedRpe":  7,
+                                                           "actualWeightKg":  60,
+                                                           "actualReps":  8,
+                                                           "actualRpe":  7.5,
+                                                           "isWarmup":  false,
+                                                           "completedAt":  "2026-07-30T08:26:17.130008+00:00",
+                                                           "notes":  "Completed through set action",
+                                                           "updatedAt":  "2026-07-30T08:26:17.130052+00:00",
+                                                           "version":  2
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                },
+    "exercises":  [
+                      {
+                          "id":  "11111111-1111-1111-1111-111111111111",
+                          "name":  "Bench Press",
+                          "description":  null,
+                          "muscleGroup":  "Chest",
+                          "equipment":  "Barbell",
+                          "isArchived":  false,
+                          "createdAt":  "1970-01-01T00:00:00+00:00",
+                          "updatedAt":  "1970-01-01T00:00:00+00:00",
+                          "ownerId":  null
+                      },
+                      {
+                          "id":  "22222222-2222-2222-2222-222222222222",
+                          "name":  "Squat",
+                          "description":  null,
+                          "muscleGroup":  "Legs",
+                          "equipment":  "Barbell",
+                          "isArchived":  false,
+                          "createdAt":  "1970-01-01T00:00:00+00:00",
+                          "updatedAt":  "1970-01-01T00:00:00+00:00",
+                          "ownerId":  null
+                      },
+                      {
+                          "id":  "33333333-3333-3333-3333-333333333333",
+                          "name":  "Romanian Deadlift",
+                          "description":  null,
+                          "muscleGroup":  "Hamstrings",
+                          "equipment":  "Barbell",
+                          "isArchived":  false,
+                          "createdAt":  "1970-01-01T00:00:00+00:00",
+                          "updatedAt":  "1970-01-01T00:00:00+00:00",
+                          "ownerId":  null
+                      },
+                      {
+                          "id":  "44444444-4444-4444-4444-444444444444",
+                          "name":  "Lat Pulldown",
+                          "description":  null,
+                          "muscleGroup":  "Back",
+                          "equipment":  "Cable",
+                          "isArchived":  false,
+                          "createdAt":  "1970-01-01T00:00:00+00:00",
+                          "updatedAt":  "1970-01-01T00:00:00+00:00",
+                          "ownerId":  null
+                      }
+                  ],
+    "lastHealthSyncAt":  null
+}

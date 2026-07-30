@@ -1,0 +1,16 @@
+{
+    "id":  "32bbf727-0c0f-4156-8863-8e00dd2e88a5",
+    "name":  "iOS Handoff Verification",
+    "scheduledAt":  "2026-07-30T08:26:38.777812+00:00",
+    "startedAt":  "2026-07-30T08:26:38.955499+00:00",
+    "completedAt":  "2026-07-30T08:26:39.5020452+00:00",
+    "status":  "Completed",
+    "notes":  "Verified create and update",
+    "createdAt":  "2026-07-30T08:26:38.791883+00:00",
+    "updatedAt":  "2026-07-30T08:26:39.5020833+00:00",
+    "version":  4,
+    "ownerId":  "253a133a-c0c9-4702-9bf0-6725b98f24ef",
+    "exercises":  [
+
+                  ]
+}

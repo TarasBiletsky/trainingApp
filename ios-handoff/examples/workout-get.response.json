@@ -1,0 +1,91 @@
+{
+    "id":  "32bbf727-0c0f-4156-8863-8e00dd2e88a5",
+    "name":  "iOS Handoff Verification",
+    "scheduledAt":  "2026-07-30T08:26:38.777812+00:00",
+    "startedAt":  "2026-07-30T08:26:38.955499+00:00",
+    "completedAt":  "2026-07-30T08:26:39.502045+00:00",
+    "status":  "Completed",
+    "notes":  "Verified create and update",
+    "createdAt":  "2026-07-30T08:26:38.791883+00:00",
+    "updatedAt":  "2026-07-30T08:26:39.502083+00:00",
+    "version":  4,
+    "ownerId":  "253a133a-c0c9-4702-9bf0-6725b98f24ef",
+    "exercises":  [
+                      {
+                          "id":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                          "workoutId":  "32bbf727-0c0f-4156-8863-8e00dd2e88a5",
+                          "workout":  null,
+                          "exerciseId":  "11111111-1111-1111-1111-111111111111",
+                          "exercise":  {
+                                           "id":  "11111111-1111-1111-1111-111111111111",
+                                           "name":  "Bench Press",
+                                           "description":  null,
+                                           "muscleGroup":  "Chest",
+                                           "equipment":  "Barbell",
+                                           "isArchived":  false,
+                                           "createdAt":  "1970-01-01T00:00:00+00:00",
+                                           "updatedAt":  "1970-01-01T00:00:00+00:00",
+                                           "ownerId":  null
+                                       },
+                          "order":  1,
+                          "notes":  "Bench Press verification",
+                          "restSeconds":  90,
+                          "sets":  [
+                                       {
+                                           "id":  "2d790ead-b278-4c70-b158-edb5c28208a9",
+                                           "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                                           "workoutExercise":  null,
+                                           "order":  1,
+                                           "status":  "Completed",
+                                           "plannedWeightKg":  60,
+                                           "plannedReps":  8,
+                                           "plannedRpe":  7,
+                                           "actualWeightKg":  60,
+                                           "actualReps":  8,
+                                           "actualRpe":  7.5,
+                                           "isWarmup":  false,
+                                           "completedAt":  "2026-07-30T08:26:39.012384+00:00",
+                                           "notes":  "Completed through set action",
+                                           "updatedAt":  "2026-07-30T08:26:39.012385+00:00",
+                                           "version":  2
+                                       },
+                                       {
+                                           "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
+                                           "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                                           "workoutExercise":  null,
+                                           "order":  2,
+                                           "status":  "Completed",
+                                           "plannedWeightKg":  65,
+                                           "plannedReps":  5,
+                                           "plannedRpe":  8,
+                                           "actualWeightKg":  67.5,
+                                           "actualReps":  5,
+                                           "actualRpe":  8.5,
+                                           "isWarmup":  false,
+                                           "completedAt":  null,
+                                           "notes":  "Client-generated UUID",
+                                           "updatedAt":  "2026-07-30T08:26:39.197143+00:00",
+                                           "version":  2
+                                       },
+                                       {
+                                           "id":  "60d29093-04c9-4e56-b147-134a289da3fa",
+                                           "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                                           "workoutExercise":  null,
+                                           "order":  3,
+                                           "status":  "Skipped",
+                                           "plannedWeightKg":  70,
+                                           "plannedReps":  3,
+                                           "plannedRpe":  8,
+                                           "actualWeightKg":  null,
+                                           "actualReps":  null,
+                                           "actualRpe":  null,
+                                           "isWarmup":  false,
+                                           "completedAt":  null,
+                                           "notes":  "Skip action verification",
+                                           "updatedAt":  "2026-07-30T08:26:39.439871+00:00",
+                                           "version":  2
+                                       }
+                                   ]
+                      }
+                  ]
+}

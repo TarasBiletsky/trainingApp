@@ -1,0 +1,14 @@
+{
+    "id":  "2d790ead-b278-4c70-b158-edb5c28208a9",
+    "order":  1,
+    "plannedWeightKg":  60,
+    "plannedReps":  8,
+    "plannedRpe":  7,
+    "actualWeightKg":  60,
+    "actualReps":  8,
+    "actualRpe":  7.5,
+    "isWarmup":  false,
+    "notes":  "Completed through set action",
+    "version":  1,
+    "status":  "Completed"
+}

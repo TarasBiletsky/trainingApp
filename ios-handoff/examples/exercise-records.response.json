@@ -1,0 +1,14 @@
+{
+    "maxWeightKg":  67.5,
+    "maxRepsByWeight":  [
+                            {
+                                "weightKg":  67.5,
+                                "reps":  5
+                            },
+                            {
+                                "weightKg":  60,
+                                "reps":  8
+                            }
+                        ],
+    "epleyOneRepMax":  78.75
+}

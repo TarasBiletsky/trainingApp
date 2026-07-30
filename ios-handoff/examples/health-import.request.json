@@ -1,0 +1,17 @@
+{
+    "value":  [
+                  {
+                      "id":  "ade75479-bf68-45ca-af53-07ace3b1b148",
+                      "type":  "workout",
+                      "startAt":  "2026-07-30T07:42:20.0744256+00:00",
+                      "endAt":  "2026-07-30T08:27:20.0744256+00:00",
+                      "numericValue":  45,
+                      "unit":  "min",
+                      "sourceName":  "iOS handoff verification",
+                      "sourceBundleId":  "com.example.training",
+                      "externalId":  "ios-handoff-workout-32bbf727-0c0f-4156-8863-8e00dd2e88a5",
+                      "metadataJson":  "{\"activityType\":\"traditionalStrengthTraining\",\"durationSeconds\":2700}"
+                  }
+              ],
+    "Count":  1
+}

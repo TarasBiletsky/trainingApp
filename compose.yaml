@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-training}
+      POSTGRES_USER: ${POSTGRES_USER:-training}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes: [training-postgres:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"], interval: 5s, timeout: 3s, retries: 10}
+    restart: unless-stopped
+  api:
+    build: .
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      TRAINING_DB_CONNECTION: Host=db;Port=5432;Database=${POSTGRES_DB:-training};Username=${POSTGRES_USER:-training};Password=${POSTGRES_PASSWORD}
+      TRAINING_JWT_KEY: ${TRAINING_JWT_KEY}
+      TRAINING_ADMIN_USERNAME: ${TRAINING_ADMIN_USERNAME:-admin}
+      TRAINING_ADMIN_PASSWORD: ${TRAINING_ADMIN_PASSWORD}
+      TRAINING_HOME_ASSISTANT_API_KEY: ${TRAINING_HOME_ASSISTANT_API_KEY}
+      TRAINING_HOME_ASSISTANT_USERNAME: ${TRAINING_HOME_ASSISTANT_USERNAME:-taras}
+      TRAINING_AUTO_MIGRATE: "false"
+    ports:
+      - "${TRAINING_BIND_ADDRESS:-0.0.0.0}:${TRAINING_PORT:-8181}:8080"
+    depends_on: {migrate: {condition: service_completed_successfully}}
+    healthcheck: {test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/ready || exit 1"], interval: 10s, timeout: 3s, retries: 10}
+    restart: unless-stopped
+  migrate:
+    image: postgres:17-alpine
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./database/migrations.sql:/migrations.sql:ro
+    command: ["sh", "-c", "psql -v ON_ERROR_STOP=1 -h db -U ${POSTGRES_USER:-training} -d ${POSTGRES_DB:-training} -f /migrations.sql"]
+    depends_on: {db: {condition: service_healthy}}
+    restart: "no"
+volumes: {training-postgres: {}}

@@ -1,0 +1,13 @@
+{
+    "id":  "5d040885-2d30-4a22-ac20-2f6326918297",
+    "workoutId":  "32bbf727-0c0f-4156-8863-8e00dd2e88a5",
+    "workout":  null,
+    "exerciseId":  "11111111-1111-1111-1111-111111111111",
+    "exercise":  null,
+    "order":  1,
+    "notes":  "Bench Press verification",
+    "restSeconds":  90,
+    "sets":  [
+
+             ]
+}

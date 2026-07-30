@@ -1,0 +1,13 @@
+bin/
+obj/
+.env
+IOS_BACKEND_HANDOFF.md
+artifacts/
+.api-*-stale/
+*.user
+*.7z
+*.zip
+*.dump
+.DS_Store
+DerivedData/
+xcuserdata/

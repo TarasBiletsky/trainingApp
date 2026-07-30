@@ -1,0 +1,14 @@
+{
+    "id":  "2d790ead-b278-4c70-b158-edb5c28208a9",
+    "order":  1,
+    "plannedWeightKg":  60,
+    "plannedReps":  8,
+    "plannedRpe":  7,
+    "actualWeightKg":  null,
+    "actualReps":  null,
+    "actualRpe":  null,
+    "isWarmup":  false,
+    "notes":  "Direct set endpoint",
+    "version":  null,
+    "status":  "Planned"
+}

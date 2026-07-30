@@ -1,0 +1,24 @@
+{
+    "value":  [
+                  {
+                      "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
+                      "workoutExerciseId":  "5d040885-2d30-4a22-ac20-2f6326918297",
+                      "expectedVersion":  0,
+                      "value":  {
+                                    "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
+                                    "order":  2,
+                                    "plannedWeightKg":  65,
+                                    "plannedReps":  5,
+                                    "plannedRpe":  8,
+                                    "actualWeightKg":  65,
+                                    "actualReps":  5,
+                                    "actualRpe":  8,
+                                    "isWarmup":  false,
+                                    "notes":  "Client-generated UUID",
+                                    "version":  null,
+                                    "status":  "Completed"
+                                }
+                  }
+              ],
+    "Count":  1
+}

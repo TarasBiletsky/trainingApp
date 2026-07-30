@@ -1,0 +1,10 @@
+{
+    "accessToken":  "\u003cjwt\u003e",
+    "refreshToken":  "\u003copaque-refresh-token\u003e",
+    "expiresAt":  "2026-07-30T12:15:00Z",
+    "user":  {
+                 "id":  "00000000-0000-0000-0000-000000000000",
+                 "userName":  "\u003cusername\u003e",
+                 "isAdmin":  false
+             }
+}
