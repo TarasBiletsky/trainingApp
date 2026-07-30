@@ -22,6 +22,8 @@ try {
     if ($choices.Count -lt 2) { throw 'Two exercises are required for the editor smoke test.' }
     $workout = Send 'workouts/' 'POST' @{ name = 'Workout editor verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddHours(1).ToString('o'); notes = 'automatic smoke test' }
     $exercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
+    $secondExercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[1].id; order = 2; notes = ''; restSeconds = 90; weightMultiplier = 1 }
+    Send "workouts/$($workout.id)/exercises/$($secondExercise.id)" 'DELETE' | Out-Null
     1..2 | ForEach-Object { Send "workouts/$($workout.id)/exercises/$($exercise.id)/sets" 'POST' @{ order = $_; plannedWeightKg = 50; plannedReps = 8; isWarmup = $false } | Out-Null }
     $before = Send "workouts/$($workout.id)" 'GET'
     $setIds = @($before.exercises[0].sets.id)
