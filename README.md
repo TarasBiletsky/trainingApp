@@ -20,6 +20,17 @@ docker compose up --build -d
 Invoke-WebRequest http://127.0.0.1:8181/health/ready
 ```
 
+## Build the iOS app
+
+```bash
+cd apps/ios
+brew install xcodegen
+xcodegen generate
+open TrainingApp.xcodeproj
+```
+
+The generated project targets iOS 17+. Select a Personal Team in Signing & Capabilities before installing on a physical iPhone. API contracts and integration examples live in `ios-handoff`.
+
 On first start the migrator applies the checked-in idempotent SQL and the API creates the initial administrator from `TRAINING_ADMIN_USERNAME` / `TRAINING_ADMIN_PASSWORD`. Administrators can create and deactivate additional accounts through `/api/v1/users`; there is no public registration endpoint. Workouts, templates and health data are isolated by user. All timestamps are UTC ISO 8601 values and all identifiers are UUIDs.
 
 For a host SDK workflow, install the .NET 10 SDK and set the environment variables from `.env.example`, then run:
