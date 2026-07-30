@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +31,13 @@ builder.Services.AddHealthChecks().AddNpgSql(connectionString);
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddProblemDetails();
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Environment.GetEnvironmentVariable("TRAINING_DATA_PROTECTION_KEYS_PATH") ?? Path.Combine(builder.Environment.ContentRootPath, ".data-protection-keys")))
+    .SetApplicationName("TrainingApp");
 builder.Services.ConfigureHttpJsonOptions(o => { o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); o.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 builder.Services.AddAuthentication(o => { o.DefaultScheme = "smart"; o.DefaultChallengeScheme = "smart"; })
     .AddPolicyScheme("smart", "Cookie or Bearer", o => o.ForwardDefaultSelector = c => c.Request.Headers.Authorization.ToString().StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? JwtBearerDefaults.AuthenticationScheme : CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(o => { o.Cookie.Name = "training.auth"; o.Cookie.HttpOnly = true; o.Cookie.SameSite = SameSiteMode.Strict; o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; o.ExpireTimeSpan = TimeSpan.FromDays(30); o.SlidingExpiration = true; o.Events.OnRedirectToLogin = c => { c.Response.StatusCode = 401; return Task.CompletedTask; }; })
+    .AddCookie(o => { o.Cookie.Name = "training.auth"; o.Cookie.HttpOnly = true; o.Cookie.SameSite = SameSiteMode.Strict; o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; o.Cookie.MaxAge = TimeSpan.FromDays(30); o.ExpireTimeSpan = TimeSpan.FromDays(30); o.SlidingExpiration = true; o.Events.OnRedirectToLogin = c => { c.Response.StatusCode = 401; return Task.CompletedTask; }; })
     .AddJwtBearer(o => { o.TokenValidationParameters = TokenFactory.Validation(jwtKey); });
 builder.Services.AddAuthorization(o => o.AddPolicy("admin", p => p.RequireClaim("is_admin", "true")));
 builder.Services.AddEndpointsApiExplorer();

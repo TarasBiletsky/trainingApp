@@ -18,7 +18,10 @@ services:
       TRAINING_ADMIN_PASSWORD: ${TRAINING_ADMIN_PASSWORD}
       TRAINING_HOME_ASSISTANT_API_KEY: ${TRAINING_HOME_ASSISTANT_API_KEY}
       TRAINING_HOME_ASSISTANT_USERNAME: ${TRAINING_HOME_ASSISTANT_USERNAME:-taras}
+      TRAINING_DATA_PROTECTION_KEYS_PATH: /keys
       TRAINING_AUTO_MIGRATE: "false"
+    volumes:
+      - training-dataprotection:/keys
     ports:
       - "${TRAINING_BIND_ADDRESS:-0.0.0.0}:${TRAINING_PORT:-8181}:8080"
     depends_on: {migrate: {condition: service_completed_successfully}}
@@ -33,4 +36,4 @@ services:
     command: ["sh", "-c", "psql -v ON_ERROR_STOP=1 -h db -U ${POSTGRES_USER:-training} -d ${POSTGRES_DB:-training} -f /migrations.sql"]
     depends_on: {db: {condition: service_healthy}}
     restart: "no"
-volumes: {training-postgres: {}}
+volumes: {training-postgres: {}, training-dataprotection: {}}

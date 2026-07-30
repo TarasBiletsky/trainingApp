@@ -115,7 +115,14 @@ private struct LoginView: View {
                 Section("Вход") {
                     TextField("Логин", text: $userName)
                         .textInputAutocapitalization(.never)
+                        .textContentType(.username)
+                        .autocorrectionDisabled()
                     SecureField("Пароль", text: $password)
+                        .textContentType(.password)
+                        .submitLabel(.go)
+                        .onSubmit {
+                            Task { await auth.login(baseURL: baseURL, userName: userName, password: password) }
+                        }
                     if let error = auth.errorMessage {
                         Text(error).foregroundStyle(.red)
                     }
