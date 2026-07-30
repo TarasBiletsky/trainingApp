@@ -1,0 +1,17 @@
+{
+  "from": "2026-07-01T00:00:00Z",
+  "to": "2026-08-01T00:00:00Z",
+  "totalVolumeKg": 8500,
+  "byExercise": [
+    {
+      "exerciseId": "11111111-1111-1111-1111-111111111111",
+      "exerciseName": "Dumbbell Bench Press",
+      "totalVolumeKg": 8500,
+      "completedSets": 8,
+      "totalReps": 64
+    }
+  ],
+  "byDay": [
+    { "date": "2026-07-15T00:00:00Z", "totalVolumeKg": 8500 }
+  ]
+}

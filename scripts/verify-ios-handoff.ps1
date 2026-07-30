@@ -67,8 +67,8 @@ $syncCreated = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncCreateRequest
 Save-Json 'sync-create.request.json' $syncCreateRequest
 Save-Json 'sync-create.response.json' $syncCreated
 
-$syncRetryConflict = Invoke-Conflict "$baseUrl/workouts/sync" $syncCreateRequest
-Save-Json 'sync-retry.response-409.json' $syncRetryConflict
+$syncRetry = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncCreateRequest
+Save-Json 'sync-retry.response.json' $syncRetry
 
 $syncUpdateRequest = @([ordered]@{ id=$syncSetId; workoutExerciseId=$workoutExerciseId; expectedVersion=1; value=[ordered]@{ id=$syncSetId; order=2; plannedWeightKg=65; plannedReps=5; plannedRpe=8; actualWeightKg=67.5; actualReps=5; actualRpe=8.5; isWarmup=$false; notes='Updated by sync'; version=1; status='Completed' } })
 $syncUpdated = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncUpdateRequest
@@ -90,4 +90,4 @@ Save-Json 'exercise-history.response.json' (Invoke-Json "$baseUrl/exercises/1111
 Save-Json 'exercise-records.response.json' (Invoke-Json "$baseUrl/exercises/11111111-1111-1111-1111-111111111111/records")
 Save-Json 'templates-list.response.json' (Invoke-Json "$baseUrl/templates")
 
-[pscustomobject]@{ WorkoutId=$workoutId; BootstrapWorkout=($bootstrap.workout.id -eq $workoutId); SyncCreate='200'; SyncRetry='409'; SyncUpdate='200'; SyncConflict='409'; WorkoutCompleted=($completedWorkout.status -eq 'Completed') }
+[pscustomobject]@{ WorkoutId=$workoutId; BootstrapWorkout=($bootstrap.workout.id -eq $workoutId); SyncCreate='200'; SyncRetry='200'; SyncUpdate='200'; SyncConflict='409'; WorkoutCompleted=($completedWorkout.status -eq 'Completed') }

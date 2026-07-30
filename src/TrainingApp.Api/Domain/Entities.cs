@@ -47,6 +47,7 @@ public sealed class WorkoutExercise
     public int Order { get; set; }
     public string? Notes { get; set; }
     public int RestSeconds { get; set; } = 90;
+    public int WeightMultiplier { get; set; } = 1;
     public List<SetEntry> Sets { get; set; } = [];
 }
 
@@ -81,7 +82,7 @@ public sealed class WorkoutTemplate
 public sealed class TemplateExercise
 {
     public Guid Id { get; set; } = Guid.NewGuid(); public Guid WorkoutTemplateId { get; set; } public WorkoutTemplate? WorkoutTemplate { get; set; }
-    public Guid ExerciseId { get; set; } public Exercise? Exercise { get; set; } public int Order { get; set; } public int RestSeconds { get; set; } = 90;
+    public Guid ExerciseId { get; set; } public Exercise? Exercise { get; set; } public int Order { get; set; } public int RestSeconds { get; set; } = 90; public int WeightMultiplier { get; set; } = 1;
     public List<TemplateSet> Sets { get; set; } = [];
 }
 public sealed class TemplateSet

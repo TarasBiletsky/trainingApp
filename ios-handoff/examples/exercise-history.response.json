@@ -1,4 +1,4 @@
-{
+﻿{
     "value":  [
                   {
                       "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
@@ -16,6 +16,42 @@
                       "completedAt":  null,
                       "notes":  "Client-generated UUID",
                       "updatedAt":  "2026-07-30T08:26:39.197143+00:00",
+                      "version":  2
+                  },
+                  {
+                      "id":  "efaaba9f-32f9-4842-8e28-7c05dd376221",
+                      "workoutExerciseId":  "f256bb0e-6557-4c0d-9abe-e07b8c34787f",
+                      "workoutExercise":  null,
+                      "order":  2,
+                      "status":  "Completed",
+                      "plannedWeightKg":  65,
+                      "plannedReps":  5,
+                      "plannedRpe":  8,
+                      "actualWeightKg":  67.5,
+                      "actualReps":  5,
+                      "actualRpe":  8.5,
+                      "isWarmup":  false,
+                      "completedAt":  "2026-07-30T10:55:35.002246+00:00",
+                      "notes":  "Client-generated UUID",
+                      "updatedAt":  "2026-07-30T10:55:35.095848+00:00",
+                      "version":  2
+                  },
+                  {
+                      "id":  "d7b3a042-791d-4e78-b5bf-a12cbf5316b0",
+                      "workoutExerciseId":  "f256bb0e-6557-4c0d-9abe-e07b8c34787f",
+                      "workoutExercise":  null,
+                      "order":  1,
+                      "status":  "Completed",
+                      "plannedWeightKg":  60,
+                      "plannedReps":  8,
+                      "plannedRpe":  7,
+                      "actualWeightKg":  60,
+                      "actualReps":  8,
+                      "actualRpe":  7.5,
+                      "isWarmup":  false,
+                      "completedAt":  "2026-07-30T10:55:34.922972+00:00",
+                      "notes":  "Completed through set action",
+                      "updatedAt":  "2026-07-30T10:55:34.923004+00:00",
                       "version":  2
                   },
                   {
@@ -55,5 +91,5 @@
                       "version":  2
                   }
               ],
-    "Count":  3
+    "Count":  5
 }

@@ -1,9 +1,10 @@
-{
+﻿{
     "value":  [
                   {
-                      "id":  "2ef1d237-2b4a-4d2f-a9f0-78fe4321eaf8",
+                      "id":  "efaaba9f-32f9-4842-8e28-7c05dd376221",
                       "status":  "updated",
-                      "version":  2
+                      "version":  2,
+                      "current":  null
                   }
               ],
     "Count":  1

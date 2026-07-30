@@ -15,6 +15,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         b.HasDefaultSchema("training");
         b.Entity<Exercise>().HasIndex(x => new { x.OwnerId, x.Name }).IsUnique();
         b.Entity<Workout>().Property(x => x.Version).IsConcurrencyToken(); b.Entity<SetEntry>().Property(x => x.Version).IsConcurrencyToken();
+        b.Entity<WorkoutExercise>().Property(x => x.WeightMultiplier).HasDefaultValue(1); b.Entity<WorkoutExercise>().ToTable(t => t.HasCheckConstraint("CK_WorkoutExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)"));
+        b.Entity<TemplateExercise>().Property(x => x.WeightMultiplier).HasDefaultValue(1); b.Entity<TemplateExercise>().ToTable(t => t.HasCheckConstraint("CK_TemplateExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)"));
         b.Entity<WorkoutExercise>().HasIndex(x => new { x.WorkoutId, x.Order }).IsUnique(); b.Entity<SetEntry>().HasIndex(x => new { x.WorkoutExerciseId, x.Order }).IsUnique();
         b.Entity<HealthSample>().HasIndex(x => new { x.OwnerId, x.Type, x.SourceBundleId, x.ExternalId }).IsUnique();
         b.Entity<BodyMeasurement>().HasIndex(x => new { x.OwnerId, x.Source, x.ExternalId }).IsUnique(); b.Entity<LocalUser>().HasIndex(x => x.UserName).IsUnique(); b.Entity<RefreshToken>().HasIndex(x => x.TokenHash).IsUnique();

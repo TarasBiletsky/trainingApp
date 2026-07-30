@@ -184,48 +184,6 @@
         "security": [ ]
       }
     },
-    "/api/v1/auth/register": {
-      "post": {
-        "tags": [
-          "TrainingApp.Api"
-        ],
-        "parameters": [
-          {
-            "name": "web",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TokenResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [ ]
-      }
-    },
     "/api/v1/auth/refresh": {
       "post": {
         "tags": [
@@ -266,6 +224,64 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        },
+        "security": [ ]
+      }
+    },
+    "/api/v1/statistics/volume": {
+      "get": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "exerciseId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "includeWarmups",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeStatistics"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -786,11 +802,14 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Workout"
+                    "$ref": "#/components/schemas/CalendarWorkout"
                   }
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -1221,6 +1240,45 @@
         },
         "additionalProperties": false
       },
+      "CalendarWorkout": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkoutStatus"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalVolumeKg": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChangePasswordRequest": {
         "type": "object",
         "properties": {
@@ -1263,6 +1321,20 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DayVolume": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalVolumeKg": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -1330,6 +1402,32 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExerciseVolume": {
+        "type": "object",
+        "properties": {
+          "exerciseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "exerciseName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalVolumeKg": {
+            "type": "number",
+            "format": "double"
+          },
+          "completedSets": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalReps": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1585,12 +1683,11 @@
       },
       "SetStatus": {
         "enum": [
-          0,
-          1,
-          2
+          "Planned",
+          "Completed",
+          "Skipped"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "SetSyncCommand": {
         "type": "object",
@@ -1724,6 +1821,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "weightMultiplier": {
+            "type": "integer",
+            "format": "int32"
+          },
           "sets": {
             "type": "array",
             "items": {
@@ -1760,6 +1861,10 @@
               "$ref": "#/components/schemas/TemplateSetWrite"
             },
             "nullable": true
+          },
+          "weightMultiplier": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1959,6 +2064,38 @@
         },
         "additionalProperties": false
       },
+      "VolumeStatistics": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalVolumeKg": {
+            "type": "number",
+            "format": "double"
+          },
+          "byExercise": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExerciseVolume"
+            },
+            "nullable": true
+          },
+          "byDay": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DayVolume"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Workout": {
         "required": [
           "name"
@@ -2053,6 +2190,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "weightMultiplier": {
+            "type": "integer",
+            "format": "int32"
+          },
           "sets": {
             "type": "array",
             "items": {
@@ -2086,19 +2227,22 @@
           "restSeconds": {
             "type": "integer",
             "format": "int32"
+          },
+          "weightMultiplier": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "WorkoutStatus": {
         "enum": [
-          0,
-          1,
-          2,
-          3
+          "Planned",
+          "InProgress",
+          "Completed",
+          "Cancelled"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "WorkoutTemplate": {
         "required": [

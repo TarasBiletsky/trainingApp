@@ -1,7 +1,6 @@
 bin/
 obj/
 .env
-IOS_BACKEND_HANDOFF.md
 artifacts/
 .api-*-stale/
 *.user

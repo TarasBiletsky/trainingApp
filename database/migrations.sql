@@ -592,3 +592,23 @@ BEGIN
 END $EF$;
 COMMIT;
 
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
+    ALTER TABLE training."WorkoutExercises" ADD "WeightMultiplier" integer NOT NULL DEFAULT 1;
+    ALTER TABLE training."TemplateExercises" ADD "WeightMultiplier" integer NOT NULL DEFAULT 1;
+    ALTER TABLE training."WorkoutExercises" ADD CONSTRAINT "CK_WorkoutExercises_WeightMultiplier" CHECK ("WeightMultiplier" IN (1, 2));
+    ALTER TABLE training."TemplateExercises" ADD CONSTRAINT "CK_TemplateExercises_WeightMultiplier" CHECK ("WeightMultiplier" IN (1, 2));
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260730140000_AddExerciseWeightMultiplier', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;

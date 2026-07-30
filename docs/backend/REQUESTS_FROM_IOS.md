@@ -1,6 +1,18 @@
-# Backend requests from iOS
+# Backend requests from iOS — completed
 
-Checked against backend commit `ecfc602` and the iOS client on 2026-07-30. Implement these items in priority order. Keep this file until the runtime API, tests, and `ios-handoff` artifacts have been updated. Do not include credentials or tokens in commits.
+Status: backend work completed and runtime-smoke-tested on 2026-07-30. OpenAPI and `ios-handoff` were regenerated. This file remains as the acceptance history; the iOS follow-up list is at the end.
+
+Implemented: public registration removal; string enums in OpenAPI; exact set-only sync contract and idempotent exact create retry; anonymous/idempotent refresh-token logout; weight multiplier migration and constraints; calendar DTO with volume; volume statistics; updated runtime artifacts.
+
+## Remaining iOS work
+
+- Decode and persist `weightMultiplier` in `WorkoutExerciseDTO`.
+- Load calendar months from `GET /workouts?from=&to=` instead of deriving history from the single bootstrap workout.
+- Load statistics from `GET /statistics/volume`.
+- Upload local `needsSync` set changes through `/workouts/sync`, handling `existing` and 409 conflicts.
+- Call `/auth/logout` with the refresh token before clearing Keychain.
+
+The detailed sections below are retained for traceability and should not be treated as open backend tasks.
 
 ## P0 — security and contract correctness
 

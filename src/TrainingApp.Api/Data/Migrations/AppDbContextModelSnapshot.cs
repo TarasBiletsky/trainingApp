@@ -352,6 +352,11 @@ namespace TrainingApp.Api.Data.Migrations
                     b.Property<int>("RestSeconds")
                         .HasColumnType("integer");
 
+                    b.Property<int>("WeightMultiplier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
                     b.Property<Guid>("WorkoutTemplateId")
                         .HasColumnType("uuid");
 
@@ -361,7 +366,10 @@ namespace TrainingApp.Api.Data.Migrations
 
                     b.HasIndex("WorkoutTemplateId");
 
-                    b.ToTable("TemplateExercises", "training");
+                    b.ToTable("TemplateExercises", "training", t =>
+                        {
+                            t.HasCheckConstraint("CK_TemplateExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)");
+                        });
                 });
 
             modelBuilder.Entity("TrainingApp.Api.Domain.TemplateSet", b =>
@@ -456,6 +464,11 @@ namespace TrainingApp.Api.Data.Migrations
                     b.Property<int>("RestSeconds")
                         .HasColumnType("integer");
 
+                    b.Property<int>("WeightMultiplier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
                     b.Property<Guid>("WorkoutId")
                         .HasColumnType("uuid");
 
@@ -466,7 +479,10 @@ namespace TrainingApp.Api.Data.Migrations
                     b.HasIndex("WorkoutId", "Order")
                         .IsUnique();
 
-                    b.ToTable("WorkoutExercises", "training");
+                    b.ToTable("WorkoutExercises", "training", t =>
+                        {
+                            t.HasCheckConstraint("CK_WorkoutExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)");
+                        });
                 });
 
             modelBuilder.Entity("TrainingApp.Api.Domain.WorkoutTemplate", b =>
