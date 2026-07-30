@@ -1,4 +1,5 @@
 import Charts
+import SwiftData
 import SwiftUI
 
 struct StatisticsView: View {
@@ -6,6 +7,7 @@ struct StatisticsView: View {
     @AppStorage("apiBaseURL") private var baseURL = "http://192.168.31.45:8181/api/v1/"
     @State private var statistics: VolumeStatisticsDTO?
     @State private var errorMessage: String?
+    @Query private var workouts: [Workout]
 
     var body: some View {
         NavigationStack {
@@ -28,7 +30,7 @@ struct StatisticsView: View {
     private var metrics: some View {
         HStack(spacing: 10) {
             metric("VOLUME", value: statistics.map { String(format: "%.1f t", $0.totalVolumeKg / 1000) } ?? "—")
-            metric("ACTIVE DAYS", value: statistics.map { "\($0.byDay.count)" } ?? "—")
+            metric("SESSIONS", value: "\(workouts.filter { $0.status == .completed }.count)")
             metric("SETS", value: statistics.map { "\($0.byExercise.reduce(0) { $0 + $1.completedSets })" } ?? "—")
         }
     }

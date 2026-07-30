@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 extension Color {
-    static let trainingLime = Color(red: 0.78, green: 1, blue: 0.18)
+    static let trainingLime = Color(red: 0.84, green: 1, blue: 0.24)
     static let trainingPanel = Color(red: 0.06, green: 0.075, blue: 0.085)
 }
 
