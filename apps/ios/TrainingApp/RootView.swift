@@ -73,6 +73,7 @@ struct RootView: View {
                 }
             }
             .navigationTitle(currentWorkout == nil ? "СЕГОДНЯ" : "LOG SESSION")
+            .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .bottom) {
                 if let syncError {
                     Text(syncError)
@@ -129,6 +130,7 @@ private struct SettingsView: View {
             }
             .scrollContentBackground(.hidden).background(Color.black)
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 

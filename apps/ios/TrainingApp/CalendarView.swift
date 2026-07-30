@@ -43,6 +43,7 @@ struct CalendarView: View {
             .padding(.horizontal)
             .background(Color.black)
             .navigationTitle("Календарь")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup {
                     Button("Сегодня") { selectedDate = .now; displayedMonth = .now }

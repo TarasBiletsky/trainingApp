@@ -22,6 +22,7 @@ struct StatisticsView: View {
             }
             .background(Color.black)
             .navigationTitle("Progress")
+            .navigationBarTitleDisplayMode(.inline)
             .refreshable { await load() }
             .task { await load() }
         }
