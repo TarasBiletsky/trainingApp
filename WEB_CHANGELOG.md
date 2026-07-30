@@ -10,6 +10,8 @@
 - Mobile text scaling is fixed across tabs.
 - Workouts can be deleted with all exercises and sets.
 - Choosing a template fills the scheduling form and waits for explicit creation.
+- Empty workout days use a focused start screen; blank and template workouts open in the same full editor.
+- Mobile week and month calendars stack days vertically without horizontal clipping.
 
 ## Deferred iOS parity
 
