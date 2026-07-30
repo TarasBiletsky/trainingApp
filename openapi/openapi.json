@@ -471,6 +471,16 @@
         }
       }
     },
+    "/api/v1/users/me/preferences": {
+      "put": {
+        "tags": ["TrainingApp.Api"],
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserPreferencesRequest"}}}
+        },
+        "responses": {"200": {"description": "OK", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserResponse"}}}}, "400": {"description": "Bad Request"}}
+      }
+    },
     "/api/v1/users": {
       "get": {
         "tags": [
@@ -2117,6 +2127,12 @@
         },
         "additionalProperties": false
       },
+      "UserPreferencesRequest": {
+        "type": "object",
+        "required": ["colorTheme"],
+        "properties": {"colorTheme": {"type": "string", "enum": ["purple", "toxic", "red"]}},
+        "additionalProperties": false
+      },
       "UserResponse": {
         "type": "object",
         "properties": {
@@ -2133,6 +2149,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "colorTheme": {
+            "type": "string",
+            "enum": ["purple", "toxic", "red"]
           },
           "createdAt": {
             "type": "string",

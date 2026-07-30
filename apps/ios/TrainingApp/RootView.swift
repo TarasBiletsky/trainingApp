@@ -2,8 +2,15 @@ import SwiftData
 import SwiftUI
 
 extension Color {
-    static let trainingLime = Color(red: 0.84, green: 1, blue: 0.24)
+    static var trainingLime: Color { trainingAccent(UserDefaults.standard.string(forKey: "colorTheme") ?? "purple") }
     static let trainingPanel = Color(red: 0.06, green: 0.075, blue: 0.085)
+    static func trainingAccent(_ theme: String) -> Color {
+        switch theme {
+        case "toxic": Color(red: 0.84, green: 1, blue: 0.24)
+        case "red": Color(red: 1, green: 0.29, blue: 0.24)
+        default: Color(red: 0.71, green: 0.61, blue: 1)
+        }
+    }
 }
 
 struct RootView: View {
@@ -12,6 +19,7 @@ struct RootView: View {
     @AppStorage("apiBaseURL") private var baseURL = "http://192.168.31.45:8181/api/v1/"
     @State private var syncError: String?
     @State private var exerciseOptions: [ExerciseDTO] = []
+    @AppStorage("colorTheme") private var colorTheme = "purple"
     @Query(sort: \Workout.scheduledAt) private var workouts: [Workout]
 
     private var currentWorkout: Workout? {
@@ -41,7 +49,11 @@ struct RootView: View {
 
             StatisticsView()
                 .tabItem { Label("Объём", systemImage: "chart.bar") }
+
+            SettingsView()
+                .tabItem { Label("Настройки", systemImage: "gearshape") }
         }
+        .tint(Color.trainingAccent(colorTheme))
         .toolbarBackground(Color.black, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
     }
@@ -89,6 +101,8 @@ struct RootView: View {
     private func loadBootstrap() async {
         do {
             let response = try await auth.bootstrap(baseURL: baseURL)
+            let user: UserProfileDTO = try await auth.get("users/me", baseURL: baseURL)
+            colorTheme = user.colorTheme
             exerciseOptions = response.exercises.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             try BootstrapImporter.importResponse(response, into: context)
             syncError = nil
@@ -97,6 +111,52 @@ struct RootView: View {
         }
     }
 }
+
+private struct SettingsView: View {
+    @EnvironmentObject private var auth: AuthSession
+    @AppStorage("apiBaseURL") private var baseURL = "http://192.168.31.45:8181/api/v1/"
+    @AppStorage("colorTheme") private var colorTheme = "purple"
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Accent color") {
+                    theme("Purple", value: "purple", color: Color(red: 0.71, green: 0.61, blue: 1))
+                    theme("Toxic yellow", value: "toxic", color: Color(red: 0.84, green: 1, blue: 0.24))
+                    theme("Red", value: "red", color: Color(red: 1, green: 0.29, blue: 0.24))
+                }
+                if let errorMessage { Text(errorMessage).foregroundStyle(.red) }
+            }
+            .scrollContentBackground(.hidden).background(Color.black)
+            .navigationTitle("Settings")
+        }
+    }
+
+    private func theme(_ title: String, value: String, color: Color) -> some View {
+        Button {
+            colorTheme = value
+            Task { await save(value) }
+        } label: {
+            HStack {
+                RoundedRectangle(cornerRadius: 6).fill(color).frame(width: 24, height: 24)
+                Text(title).foregroundStyle(.primary)
+                Spacer()
+                if colorTheme == value { Image(systemName: "checkmark").foregroundStyle(color) }
+            }
+        }
+    }
+
+    private func save(_ value: String) async {
+        do {
+            try await auth.send("users/me/preferences", method: "PUT", body: UserPreferencesBody(colorTheme: value), baseURL: baseURL)
+            errorMessage = nil
+        } catch { errorMessage = error.localizedDescription }
+    }
+}
+
+private struct UserProfileDTO: Decodable { let colorTheme: String }
+private struct UserPreferencesBody: Encodable { let colorTheme: String }
 
 private struct LoginView: View {
     @EnvironmentObject private var auth: AuthSession

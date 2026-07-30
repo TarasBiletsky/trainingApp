@@ -307,6 +307,24 @@ START TRANSACTION;
 
 DO $EF$
 BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
+    ALTER TABLE training."Users" ADD "ColorTheme" text NOT NULL DEFAULT 'purple';
+    ALTER TABLE training."Users" ADD CONSTRAINT "CK_Users_ColorTheme" CHECK ("ColorTheme" IN ('purple', 'toxic', 'red'));
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20260730180000_AddUserColorTheme', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
     IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260729143350_MultiUserOwnership') THEN
     DROP INDEX training."IX_HealthSamples_Type_SourceBundleId_ExternalId";
     END IF;

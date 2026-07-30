@@ -105,5 +105,5 @@ public sealed class BodyMeasurement
     public required string Source { get; set; } public required string RawPayload { get; set; } public DateTimeOffset ImportedAt { get; set; } = DateTimeOffset.UtcNow;
     public Guid OwnerId { get; set; }
 }
-public sealed class LocalUser { public Guid Id { get; set; } = Guid.NewGuid(); public required string UserName { get; set; } public required string PasswordHash { get; set; } public bool IsAdmin { get; set; } public bool IsActive { get; set; } = true; public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow; }
+public sealed class LocalUser { public Guid Id { get; set; } = Guid.NewGuid(); public required string UserName { get; set; } public required string PasswordHash { get; set; } public bool IsAdmin { get; set; } public bool IsActive { get; set; } = true; public string ColorTheme { get; set; } = "purple"; public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow; }
 public sealed class RefreshToken { public Guid Id { get; set; } = Guid.NewGuid(); public Guid UserId { get; set; } public LocalUser? User { get; set; } public required string TokenHash { get; set; } public DateTimeOffset ExpiresAt { get; set; } public DateTimeOffset? RevokedAt { get; set; } public Guid? ReplacedById { get; set; } }

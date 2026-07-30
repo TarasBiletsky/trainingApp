@@ -79,6 +79,12 @@ namespace TrainingApp.Api.Data.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ColorTheme")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("purple");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -245,7 +251,10 @@ namespace TrainingApp.Api.Data.Migrations
                     b.HasIndex("UserName")
                         .IsUnique();
 
-                    b.ToTable("Users", "training");
+                    b.ToTable("Users", "training", t =>
+                        {
+                            t.HasCheckConstraint("CK_Users_ColorTheme", "\"ColorTheme\" IN ('purple', 'toxic', 'red')");
+                        });
                 });
 
             modelBuilder.Entity("TrainingApp.Api.Domain.RefreshToken", b =>
