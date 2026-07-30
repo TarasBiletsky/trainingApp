@@ -1,6 +1,46 @@
-# Backend requests from iOS — completed
+# Backend requests from iOS — follow-up required
 
-Status: backend work completed and runtime-smoke-tested on 2026-07-30. OpenAPI and `ios-handoff` were regenerated. This file remains as the acceptance history; the iOS follow-up list is at the end.
+Reviewed backend commit `b2c774e` on 2026-07-30. The main feature surface was added and OpenAPI copies are byte-identical, but the items below block reliable offline volume statistics. Do not mark this file completed until these checks pass.
+
+## Open backend follow-up
+
+### P0 — synced completed sets disappear from volume statistics
+
+`POST /workouts/sync` updates `Status` but does not set or clear `SetEntry.CompletedAt`. `/statistics/volume` filters and groups strictly by `SetEntry.CompletedAt`. Therefore a set completed offline and later updated through sync can have `status = Completed` with `completedAt = null`, and is omitted from all volume statistics.
+
+- Add an optional `completedAt` to the sync/write contract so iOS can preserve the real offline completion time. Require UTC and reject implausible values; alternatively define and document a safe server timestamp fallback.
+- On transition to `Completed`, persist a non-null completion time.
+- On transition from `Completed` to `Planned` or `Skipped`, clear it.
+- An exact idempotent retry must preserve the original completion time.
+- Decide date semantics explicitly: statistics use set completion time, while calendar membership uses workout `scheduledAt`.
+- Regenerate all OpenAPI copies and sync examples after the contract changes.
+
+Add integration/service tests proving:
+
+- a set created as Completed through sync appears in `/statistics/volume`;
+- an existing Planned set completed through sync appears in the correct UTC day;
+- a skipped set is removed from volume;
+- exact retry does not change `completedAt`;
+- offline client timestamp survives sync;
+- user and `[from,to)` boundaries remain isolated.
+
+### P0 — requested tests were not added
+
+`dotnet test` still reports only the original 4 tests. The previous acceptance request required coverage for registration removal, logout revocation, enum/OpenAPI contract, sync create/retry/conflict, multiplier validation, template copying, volume aggregation, warmups, date bounds, and user isolation.
+
+- Add the missing tests; do not treat runtime smoke testing as a replacement for deterministic regression coverage.
+- The final report must include the new total test count and names/categories of the covered scenarios.
+
+### P1 — clean stale handoff statements
+
+The beginning of `ios-handoff/IOS_BACKEND_HANDOFF.md` still lists `login/register/refresh` as anonymous and says `login/register/refresh/logout` are implemented, while a later appended section correctly says registration was removed. The address section also omits the currently used LAN endpoint.
+
+- Remove all stale registration references instead of appending a correction later.
+- Add `http://192.168.31.45:8181/api/v1` and its LAN/firewall note.
+- Keep a single internally consistent description of auth and endpoints.
+- Re-run `scripts/verify-ios-handoff.ps1`.
+
+## Implemented in `b2c774e`
 
 Implemented: public registration removal; string enums in OpenAPI; exact set-only sync contract and idempotent exact create retry; anonymous/idempotent refresh-token logout; weight multiplier migration and constraints; calendar DTO with volume; volume statistics; updated runtime artifacts.
 
