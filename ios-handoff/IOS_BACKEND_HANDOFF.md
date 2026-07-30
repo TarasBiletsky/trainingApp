@@ -40,6 +40,8 @@ New-NetFirewallRule -DisplayName "Training API TCP 8181 (Private LAN)" -Directio
 
 `POST /workouts/sync` принимает массив `SetSyncCommand` с `id`, `workoutExerciseId`, `expectedVersion`, `value`; `value.completedAt` опционален и передаётся как UTC ISO-8601. Для offline completion клиент передаёт фактическое время; если оно отсутствует, сервер использует текущее UTC. Planned/Skipped очищают `completedAt`. Статистика группирует по времени завершения set, а календарь включает workout по `scheduledAt`. Результат sync — массив `{ id, status, version, current }`. Реальные сценарии:
 
+Редактор текущей тренировки использует `PUT /workouts/{workoutId}/exercises/{workoutExerciseId}` для замены упражнения без пересоздания `WorkoutExercise` и его sets. `DELETE /workouts/{workoutId}/sets/{setId}` удаляет только незавершённый set; Completed set защищён ответом 409.
+
 - `sync-create.request.json` → `sync-create.response.json`: создание set с client UUID, 200.
 - точный повтор того же create → `sync-retry.response.json`: 200 со status `existing` и подтверждённой server version.
 - `sync-update.request.json` → `sync-update.response.json`: успешное обновление, 200 и новая version.

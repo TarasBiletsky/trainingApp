@@ -29,6 +29,29 @@ struct ApiClient {
         return try JSONDecoder.api.decode(BootstrapResponse.self, from: data)
     }
 
+    func send(_ path: String, method: String, accessToken: String) async throws {
+        var request = URLRequest(url: baseURL.appending(path: path))
+        request.httpMethod = method
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        try await send(request)
+    }
+
+    func send<Request: Encodable>(_ path: String, method: String, body: Request, accessToken: String) async throws {
+        var request = URLRequest(url: baseURL.appending(path: path))
+        request.httpMethod = method
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder.api.encode(body)
+        try await send(request)
+    }
+
+    private func send(_ request: URLRequest) async throws {
+        let (_, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw ApiError.invalidResponse }
+        guard http.statusCode != 401 else { throw ApiError.unauthorized }
+        guard (200..<300).contains(http.statusCode) else { throw ApiError.invalidResponse }
+    }
+
     private func post<Request: Encodable, Response: Decodable>(
         _ path: String,
         body: Request

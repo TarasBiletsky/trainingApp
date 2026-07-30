@@ -7,7 +7,7 @@ struct BootstrapResponse: Decodable {
     let lastHealthSyncAt: Date?
 }
 
-struct ExerciseDTO: Decodable {
+struct ExerciseDTO: Decodable, Identifiable {
     let id: UUID
     let name: String
 }
@@ -31,6 +31,7 @@ struct WorkoutExerciseDTO: Decodable {
     let order: Int
     let notes: String?
     let restSeconds: Int
+    let weightMultiplier: Int
     let sets: [SetEntryDTO]?
 }
 
@@ -77,9 +78,17 @@ enum BootstrapImporter {
                                    name: exerciseNames[remoteExercise.exerciseId] ?? "Упражнение",
                                    order: remoteExercise.order)
             if exercise.workout == nil { workout.exercises.append(exercise) }
+            exercise.exerciseId = remoteExercise.exerciseId
+            exercise.name = exerciseNames[remoteExercise.exerciseId] ?? "Exercise"
+            exercise.order = remoteExercise.order
             exercise.notes = remoteExercise.notes ?? ""
             exercise.restSeconds = remoteExercise.restSeconds
+            exercise.weightMultiplier = remoteExercise.weightMultiplier
 
+            let remoteSetIds = Set((remoteExercise.sets ?? []).map(\.id))
+            for local in exercise.sets where !remoteSetIds.contains(local.id) && !local.needsSync {
+                context.delete(local)
+            }
             for remoteSet in remoteExercise.sets ?? [] {
                 if let local = exercise.sets.first(where: { $0.id == remoteSet.id }), local.needsSync { continue }
                 let set = exercise.sets.first { $0.id == remoteSet.id }

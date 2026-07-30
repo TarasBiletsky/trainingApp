@@ -926,6 +926,48 @@
         }
       }
     },
+    "/api/v1/workouts/{workoutId}/exercises/{workoutExerciseId}": {
+      "put": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "parameters": [
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "workoutExerciseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutExerciseWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/workouts/{workoutId}/exercises/{workoutExerciseId}/sets": {
       "post": {
         "tags": [
@@ -1016,6 +1058,36 @@
           },
           "required": true
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "parameters": [
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "setId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

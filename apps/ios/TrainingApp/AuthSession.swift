@@ -35,6 +35,16 @@ final class AuthSession: ObservableObject {
         return try await client(baseURL).bootstrap(accessToken: token)
     }
 
+    func send(_ path: String, method: String, baseURL: String) async throws {
+        let token = try await validAccessToken(baseURL: baseURL)
+        try await client(baseURL).send(path, method: method, accessToken: token)
+    }
+
+    func send<Request: Encodable>(_ path: String, method: String, body: Request, baseURL: String) async throws {
+        let token = try await validAccessToken(baseURL: baseURL)
+        try await client(baseURL).send(path, method: method, body: body, accessToken: token)
+    }
+
     func logout() {
         KeychainStore.clear()
         tokens = nil
