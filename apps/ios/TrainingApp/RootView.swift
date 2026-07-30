@@ -19,13 +19,15 @@ struct RootView: View {
     @AppStorage("apiBaseURL") private var baseURL = "http://192.168.31.45:8181/api/v1/"
     @State private var syncError: String?
     @State private var exerciseOptions: [ExerciseDTO] = []
+    @State private var selectedDate = Date.now
     @AppStorage("colorTheme") private var colorTheme = "purple"
     @Query(sort: \Workout.scheduledAt) private var workouts: [Workout]
 
     private var currentWorkout: Workout? {
-        workouts.first { $0.status == .inProgress }
-            ?? workouts.first { $0.status == .planned && Calendar.current.isDateInToday($0.scheduledAt) }
-            ?? workouts.first { $0.status == .completed && Calendar.current.isDateInToday($0.scheduledAt) }
+        let matches = workouts.filter { Calendar.current.isDate($0.scheduledAt, inSameDayAs: selectedDate) }
+        return matches.first { $0.status == .inProgress }
+            ?? matches.first { $0.status == .planned }
+            ?? matches.first { $0.status == .completed }
     }
 
     var body: some View {
@@ -73,7 +75,7 @@ struct RootView: View {
                     }
                 }
             }
-            .navigationTitle(currentWorkout == nil ? "СЕГОДНЯ" : "LOG SESSION")
+            .navigationTitle(selectedDate.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .bottom) {
                 if let syncError {
@@ -89,13 +91,18 @@ struct RootView: View {
                     Button("Выйти", systemImage: "rectangle.portrait.and.arrow.right") { auth.logout() }
                 }
             }
+            .simultaneousGesture(DragGesture(minimumDistance: 30).onEnded { value in
+                guard abs(value.translation.width) > abs(value.translation.height), abs(value.translation.width) > 70 else { return }
+                Task { await moveDay(value.translation.width < 0 ? 1 : -1) }
+            })
         }
     }
 
     private func createWorkout() async {
         do {
-            try await auth.send("workouts/", method: "POST", body: WorkoutWriteBody(name: "Новая тренировка", scheduledAt: .now, notes: nil, version: nil), baseURL: baseURL)
-            await loadBootstrap()
+            let scheduledAt = Calendar.current.isDateInToday(selectedDate) ? Date.now : Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: selectedDate) ?? selectedDate
+            try await auth.send("workouts/", method: "POST", body: WorkoutWriteBody(name: "Новая тренировка", scheduledAt: scheduledAt, notes: nil, version: nil), baseURL: baseURL)
+            await loadSelectedDay()
         } catch { syncError = error.localizedDescription }
     }
 
@@ -111,6 +118,33 @@ struct RootView: View {
             syncError = "Сервер недоступен — работаем офлайн"
         }
     }
+
+    private func moveDay(_ offset: Int) async {
+        selectedDate = Calendar.current.date(byAdding: .day, value: offset, to: selectedDate) ?? selectedDate
+        await loadSelectedDay()
+    }
+
+    private func loadSelectedDay() async {
+        do {
+            let calendar = Calendar.current
+            let from = calendar.startOfDay(for: selectedDate)
+            let to = calendar.date(byAdding: .day, value: 1, to: from)!
+            let rows: [DayWorkoutDTO] = try await auth.get("workouts/?from=\(from.ISO8601Format())&to=\(to.ISO8601Format())", baseURL: baseURL)
+            guard let row = rows.sorted(by: { $0.status.priority < $1.status.priority }).first else { syncError = nil; return }
+            let workout: WorkoutDTO = try await auth.get("workouts/\(row.id)", baseURL: baseURL)
+            try BootstrapImporter.importResponse(BootstrapResponse(workout: workout, exercises: exerciseOptions, lastHealthSyncAt: nil), into: context)
+            syncError = nil
+        } catch { syncError = error.localizedDescription }
+    }
+}
+
+private struct DayWorkoutDTO: Decodable {
+    let id: UUID
+    let status: String
+}
+
+private extension String {
+    var priority: Int { self == "InProgress" ? 0 : self == "Planned" ? 1 : 2 }
 }
 
 private struct SettingsView: View {
@@ -216,6 +250,16 @@ struct WorkoutView: View {
                 TextField("Workout name", text: $workout.name)
                     .submitLabel(.done)
                     .onSubmit { Task { await saveWorkout() } }
+                if Calendar.current.isDateInToday(workout.scheduledAt), let startedAt = workout.startedAt {
+                    TimelineView(.periodic(from: .now, by: 1)) { timeline in
+                        HStack {
+                            Text(workout.status == .completed ? "Duration" : "Elapsed")
+                            Spacer()
+                            Text(elapsed(from: startedAt, to: workout.completedAt ?? timeline.date))
+                                .font(.body.monospacedDigit())
+                        }
+                    }
+                }
             }
 
             ForEach(workout.exercises.sorted(by: { $0.order < $1.order })) { exercise in
@@ -271,6 +315,11 @@ struct WorkoutView: View {
 
     private var availableExerciseOptions: [ExerciseDTO] {
         exerciseOptions.isEmpty ? fetchedExerciseOptions : exerciseOptions
+    }
+
+    private func elapsed(from start: Date, to end: Date) -> String {
+        let seconds = max(0, Int(end.timeIntervalSince(start)))
+        return String(format: "%02d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60)
     }
 
     private func loadExerciseOptions() async {

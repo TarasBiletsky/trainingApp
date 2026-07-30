@@ -8,6 +8,7 @@ $login = @{ userName = $envValues.TRAINING_ADMIN_USERNAME; password = $envValues
 $tokens = Invoke-RestMethod "$baseUrl/auth/login" -Method Post -ContentType 'application/json' -Body $login
 $headers = @{ Authorization = "Bearer $($tokens.accessToken)" }
 $workout = $null
+$futureWorkout = $null
 
 function Send([string] $Path, [string] $Method, $Body = $null) {
     $arguments = @{ Uri = "$baseUrl/$Path"; Method = $Method; Headers = $headers }
@@ -46,11 +47,18 @@ try {
     Send "workouts/$($workout.id)/exercises/$($exercise.id)" 'DELETE' | Out-Null
     $afterExerciseDelete = Send "workouts/$($workout.id)" 'GET'
     if ($afterExerciseDelete.exercises.Count -ne 0) { throw 'Exercise was not deleted.' }
-    Write-Output 'Workout editor verification passed: editing, automatic lifecycle, undo, and deletion succeeded.'
+    $futureWorkout = Send 'workouts/' 'POST' @{ name = 'Future workout verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddDays(2).ToString('o'); notes = 'automatic smoke test' }
+    $futureExercise = Send "workouts/$($futureWorkout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
+    $futureSet = Send "workouts/$($futureWorkout.id)/exercises/$($futureExercise.id)/sets" 'POST' @{ order = 1; plannedWeightKg = 50; plannedReps = 8; isWarmup = $false }
+    Send "workouts/$($futureWorkout.id)/sets/$($futureSet.id)/complete" 'POST' @{ order=1; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$futureSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    $futureResult = Send "workouts/$($futureWorkout.id)" 'GET'
+    if ($futureResult.status -ne 'Planned' -or $futureResult.exercises[0].sets[0].status -ne 'Completed') { throw 'A non-today set changed the workout status.' }
+    Write-Output 'Workout editor verification passed: editing, today-only lifecycle, undo, and deletion succeeded.'
 }
 finally {
-    if ($null -ne $workout) {
-        $sql = "DELETE FROM training.`"Workouts`" WHERE `"Id`" = '$($workout.id)' AND `"OwnerId`" = '$($tokens.user.id)' AND `"Name`" = 'Workout editor verification';"
+    if ($null -ne $workout -or $null -ne $futureWorkout) {
+        $ids = @($workout.id, $futureWorkout.id) | Where-Object { $_ } | ForEach-Object { "'$_'" }
+        $sql = "DELETE FROM training.`"Workouts`" WHERE `"Id`" IN ($($ids -join ',')) AND `"OwnerId`" = '$($tokens.user.id)';"
         $start = [Diagnostics.ProcessStartInfo]::new('docker', 'exec -i trainingapp-db-1 psql -U training -d training')
         $start.RedirectStandardInput = $true; $start.RedirectStandardOutput = $true; $start.RedirectStandardError = $true; $start.UseShellExecute = $false
         $process = [Diagnostics.Process]::Start($start)
