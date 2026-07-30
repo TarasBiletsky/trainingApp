@@ -31,7 +31,10 @@ try {
     Send "workouts/$($workout.id)/sets/$($setIds[-1])" 'DELETE' | Out-Null
     $afterDelete = Send "workouts/$($workout.id)" 'GET'
     if ($afterDelete.exercises[0].sets.Count -ne 1) { throw 'Set count did not decrease.' }
-    Write-Output 'Workout editor verification passed: replacement preserved sets and set count changed.'
+    Send "workouts/$($workout.id)/exercises/$($exercise.id)" 'DELETE' | Out-Null
+    $afterExerciseDelete = Send "workouts/$($workout.id)" 'GET'
+    if ($afterExerciseDelete.exercises.Count -ne 0) { throw 'Exercise was not deleted.' }
+    Write-Output 'Workout editor verification passed: replacement preserved sets; set and exercise deletion succeeded.'
 }
 finally {
     if ($null -ne $workout) {

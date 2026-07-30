@@ -55,7 +55,12 @@ struct SetEntryDTO: Decodable {
 @MainActor
 enum BootstrapImporter {
     static func importResponse(_ response: BootstrapResponse, into context: ModelContext) throws {
-        guard let remote = response.workout else { return }
+        guard let remote = response.workout else {
+            let local = try context.fetch(FetchDescriptor<Workout>())
+            for workout in local where workout.status == .planned || workout.status == .inProgress { context.delete(workout) }
+            try context.save()
+            return
+        }
         let id = remote.id
         let existing = try context.fetch(FetchDescriptor<Workout>(predicate: #Predicate { $0.id == id })).first
         let workout = existing ?? Workout(id: id, name: remote.name, scheduledAt: remote.scheduledAt)

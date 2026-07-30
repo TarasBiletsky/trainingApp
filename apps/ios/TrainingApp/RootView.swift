@@ -24,7 +24,7 @@ struct RootView: View {
 
     private var currentWorkout: Workout? {
         workouts.first { $0.status == .inProgress }
-            ?? workouts.first { $0.status == .planned }
+            ?? workouts.first { $0.status == .planned && Calendar.current.isDateInToday($0.scheduledAt) }
     }
 
     var body: some View {
@@ -67,12 +67,12 @@ struct RootView: View {
                     ContentUnavailableView {
                         Label("Нет тренировки", systemImage: "dumbbell")
                     } actions: {
-                        Button("Создать тренировку") { createWorkout() }
+                        Button("Создать тренировку") { Task { await createWorkout() } }
                             .buttonStyle(.borderedProminent)
                     }
                 }
             }
-            .navigationTitle("LOG SESSION")
+            .navigationTitle(currentWorkout == nil ? "СЕГОДНЯ" : "LOG SESSION")
             .safeAreaInset(edge: .bottom) {
                 if let syncError {
                     Text(syncError)
@@ -83,19 +83,18 @@ struct RootView: View {
             }
             .toolbar {
                 ToolbarItemGroup {
-                    Button("Новая", systemImage: "plus") { createWorkout() }
+                    Button("Новая", systemImage: "plus") { Task { await createWorkout() } }
                     Button("Выйти", systemImage: "rectangle.portrait.and.arrow.right") { auth.logout() }
                 }
             }
         }
     }
 
-    private func createWorkout() {
-        let workout = Workout(name: "Новая тренировка")
-        let exercise = WorkoutExercise(name: "Жим лёжа", order: 0)
-        exercise.sets = (0..<3).map { SetEntry(order: $0) }
-        workout.exercises = [exercise]
-        context.insert(workout)
+    private func createWorkout() async {
+        do {
+            try await auth.send("workouts/", method: "POST", body: WorkoutWriteBody(name: "Новая тренировка", scheduledAt: .now, notes: nil, version: nil), baseURL: baseURL)
+            await loadBootstrap()
+        } catch { syncError = error.localizedDescription }
     }
 
     private func loadBootstrap() async {
@@ -231,16 +230,15 @@ struct WorkoutView: View {
                     ))
                     ForEach(exercise.sets.sorted(by: { $0.order < $1.order })) { set in
                         SetRow(set: set,
-                               onSave: { await saveSet(set) },
                                onComplete: { await completeSet(set) })
+                            .swipeActions {
+                                Button("Delete", systemImage: "trash", role: .destructive) { Task { await removeSet(set) } }
+                            }
                     }
                     HStack {
-                        Button("Remove set", systemImage: "minus") { Task { await removeLastSet(from: exercise) } }
-                            .disabled(!exercise.sets.contains { $0.status != .completed })
-                        Spacer()
-                        Text("\(exercise.sets.count) sets").foregroundStyle(.secondary)
-                        Spacer()
                         Button("Add set", systemImage: "plus") { Task { await addSet(to: exercise) } }
+                        Spacer()
+                        Button("Remove exercise", systemImage: "trash", role: .destructive) { Task { await removeExercise(exercise) } }
                     }
                 } header: {
                     HStack {
@@ -259,6 +257,12 @@ struct WorkoutView: View {
                     }
                 }
                 .listRowBackground(Color.trainingPanel)
+            }
+
+            Menu("Add exercise", systemImage: "plus") {
+                ForEach(exerciseOptions) { option in
+                    Button(option.name) { Task { await addExercise(option) } }
+                }
             }
 
             if let errorMessage { Text(errorMessage).foregroundStyle(.red) }
@@ -294,6 +298,19 @@ struct WorkoutView: View {
         }
     }
 
+    private func addExercise(_ option: ExerciseDTO) async {
+        await perform {
+            try await auth.send("workouts/\(workout.id)/exercises", method: "POST",
+                                body: ExerciseWriteBody(exerciseId: option.id, order: workout.exercises.count, notes: "", restSeconds: 90, weightMultiplier: 1), baseURL: baseURL)
+        }
+    }
+
+    private func removeExercise(_ exercise: WorkoutExercise) async {
+        await perform {
+            try await auth.send("workouts/\(workout.id)/exercises/\(exercise.id)", method: "DELETE", baseURL: baseURL)
+        }
+    }
+
     private func addSet(to exercise: WorkoutExercise) async {
         let previous = exercise.sets.max(by: { $0.order < $1.order })
         let body = SetWriteBody(order: (previous?.order ?? -1) + 1,
@@ -305,17 +322,10 @@ struct WorkoutView: View {
         }
     }
 
-    private func removeLastSet(from exercise: WorkoutExercise) async {
-        guard let set = exercise.sets.filter({ $0.status != .completed }).max(by: { $0.order < $1.order }) else { return }
+    private func removeSet(_ set: SetEntry) async {
         await perform {
             try await auth.send("workouts/\(workout.id)/sets/\(set.id)", method: "DELETE", baseURL: baseURL)
-            context.delete(set)
-            try context.save()
         }
-    }
-
-    private func saveSet(_ set: SetEntry) async {
-        await write(set, complete: false)
     }
 
     private func completeSet(_ set: SetEntry) async {
@@ -350,7 +360,6 @@ struct WorkoutView: View {
 
 private struct SetRow: View {
     @Bindable var set: SetEntry
-    let onSave: () async -> Void
     let onComplete: () async -> Void
 
     var body: some View {
@@ -365,10 +374,6 @@ private struct SetRow: View {
                 get: { set.actualReps ?? set.plannedReps },
                 set: { set.actualReps = $0 }
             ), keyboard: .numberPad)
-            Button("Save", systemImage: "square.and.arrow.down") { Task { await onSave() } }
-                .labelStyle(.iconOnly)
-                .foregroundStyle(Color.trainingLime)
-                .frame(width: 34, height: 44)
             Button("Complete set", systemImage: set.status == .completed ? "checkmark.square.fill" : "square") {
                 Task { await onComplete() }
             }
@@ -377,6 +382,10 @@ private struct SetRow: View {
             .foregroundStyle(set.status == .completed ? Color.trainingLime : .secondary)
             .frame(width: 34, height: 44)
         }
+        .padding(.vertical, 5)
+        .padding(.horizontal, 6)
+        .background(set.status == .completed ? Color.trainingLime.opacity(0.14) : Color.clear, in: .rect(cornerRadius: 9))
+        .overlay { RoundedRectangle(cornerRadius: 9).stroke(set.status == .completed ? Color.trainingLime.opacity(0.65) : Color.clear) }
     }
 
     private func compactField(_ label: String, value: Binding<Int?>, keyboard: UIKeyboardType) -> some View {
@@ -400,6 +409,13 @@ private struct SetRow: View {
         }
         .frame(maxWidth: .infinity)
     }
+}
+
+private struct WorkoutWriteBody: Encodable {
+    let name: String
+    let scheduledAt: Date
+    let notes: String?
+    let version: Int?
 }
 
 private struct ExerciseWriteBody: Encodable {
