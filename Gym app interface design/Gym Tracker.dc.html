@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  body { margin: 0; background: #17181A; }
+  body * { scrollbar-width: none; -ms-overflow-style: none; }
+  body *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  a { color: #D7FF3E; text-decoration: none; }
+  a:hover { color: #E9FF8A; }
+</style>
+</helmet>
+
+<section style="display: flex; flex-direction: column; gap: 28px; padding: 56px; font-family: Archivo, system-ui;">
+  <div style="display: flex; align-items: baseline; gap: 16px; color: #8A9099; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;">
+    <span style="font-family: 'JetBrains Mono', monospace; color: #D7FF3E;">1a</span>
+    <span>Gym tracker — iOS + web · dark</span>
+  </div>
+
+  <div id="1a" style="display: flex; flex-direction: column; gap: 40px;">
+    <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099; letter-spacing: 0.08em;">01 / LOG SESSION</div>
+        <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+          <div style="height: 100%; display: flex; flex-direction: column; background: #0A0B0C; color: #F2F3F5; font-family: Archivo, system-ui;">
+            <div style="padding: 62px 20px 14px; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #23262B;">
+              <div>
+                <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em;">Push A</div>
+                <div style="font-size: 13px; color: #8A9099; margin-top: 3px;">Week 12 · Chest, shoulders, triceps</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 500;">{{ elapsed }}</div>
+                <div style="font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">ELAPSED</div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #23262B;">
+              <div style="flex: 1; height: 4px; background: #23262B; border-radius: 2px; overflow: hidden;">
+                <div style="height: 100%; background: #D7FF3E; width: {{ pct }};"></div>
+              </div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099;">{{ setsDone }}/{{ setsTotal }} SETS</div>
+            </div>
+
+            <div style="flex: 1; overflow: auto; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px;">
+              <sc-for list="{{ exercises }}" as="ex" hint-placeholder-count="3">
+                <div style="background: #131518; border: 1px solid #23262B; border-radius: 14px; padding: 14px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                    <div>
+                      <div style="font-size: 16px; font-weight: 600;">{{ ex.name }}</div>
+                      <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">{{ ex.target }}</div>
+                    </div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{ ex.tagColor }};">{{ ex.tag }}</div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <sc-for list="{{ ex.sets }}" as="s" hint-placeholder-count="3">
+                      <div onClick="{{ s.onToggle }}" style="display: grid; grid-template-columns: 22px 1fr 1fr 28px; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; cursor: pointer; background: {{ s.bg }}; border: 1px solid {{ s.border }};">
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099;">{{ s.n }}</div>
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: {{ s.fg }};">{{ s.weight }}</div>
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: {{ s.fg }};">{{ s.reps }}</div>
+                        <div style="justify-self: end; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid {{ s.boxBorder }}; background: {{ s.boxBg }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #0A0B0C;">{{ s.mark }}</div>
+                      </div>
+                    </sc-for>
+                    <div onClick="{{ ex.onAddSet }}" style="display: flex; align-items: center; justify-content: center; gap: 7px; padding: 8px; border-radius: 9px; border: 1px dashed #33373D; font-size: 13px; font-weight: 600; color: #8A9099; cursor: pointer;" style-hover="border-color: #D7FF3E; color: #D7FF3E;">
+                      <span style="font-family: 'JetBrains Mono', monospace;">+</span>
+                      <span>Add set</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="height: 96px;"></div>
+            </div>
+
+            <div style="position: sticky; bottom: 0; padding: 12px 20px 40px; background: linear-gradient(to top, #0A0B0C 60%, rgba(10,11,12,0)); display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 12px; background: #131518; border: 1px solid {{ restBorder }}; border-radius: 12px; padding: 11px 14px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; color: {{ restColor }}; min-width: 56px;">{{ restLabel }}</div>
+                <div style="flex: 1; height: 3px; background: #23262B; border-radius: 2px; overflow: hidden;">
+                  <div style="height: 100%; background: {{ restColor }}; width: {{ restPct }};"></div>
+                </div>
+                <div style="font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">REST</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <div onClick="{{ addExercise }}" style="flex: 1; text-align: center; padding: 13px; border-radius: 12px; border: 1px solid #33373D; font-size: 15px; font-weight: 600; color: #F2F3F5; cursor: pointer;" style-hover="border-color: #6B7178;">Add exercise</div>
+                <div style="flex: 1; text-align: center; padding: 13px; border-radius: 12px; background: #D7FF3E; color: #0A0B0C; font-size: 15px; font-weight: 700; cursor: pointer;">Finish</div>
+              </div>
+            </div>
+          </div>
+        </x-import>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099; letter-spacing: 0.08em;">02 / PROGRESS</div>
+        <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+          <div style="height: 100%; overflow: auto; background: #0A0B0C; color: #F2F3F5; font-family: Archivo, system-ui;">
+            <div style="padding: 62px 20px 16px;">
+              <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em;">Progress</div>
+              <div style="font-size: 13px; color: #8A9099; margin-top: 3px;">Last 12 weeks</div>
+            </div>
+
+            <div style="padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 13px;">
+                <div style="font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">SESSIONS</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 500; margin-top: 4px;">47</div>
+                <div style="font-size: 12px; color: #D7FF3E;">3.9 / week</div>
+              </div>
+              <div style="background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 13px;">
+                <div style="font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">VOLUME</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 500; margin-top: 4px;">18.4t</div>
+                <div style="font-size: 12px; color: #D7FF3E;">+6.2% vs prev</div>
+              </div>
+            </div>
+
+            <div style="margin: 16px 20px 0; background: #131518; border: 1px solid #23262B; border-radius: 14px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div style="font-size: 14px; font-weight: 600;">Weekly volume</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099;">TONNES</div>
+              </div>
+              <div style="display: flex; align-items: flex-end; gap: 6px; height: 118px; margin-top: 16px;">
+                <div style="flex: 1; height: 42%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 51%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 47%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 60%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 55%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 68%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 63%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 74%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 38%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 81%; background: #2C3138; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 88%; background: #D7FF3E; border-radius: 3px 3px 0 0;"></div>
+                <div style="flex: 1; height: 96%; background: #D7FF3E; border-radius: 3px 3px 0 0;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099;">
+                <span>W1</span><span>W6</span><span>W12</span>
+              </div>
+            </div>
+
+            <div style="margin: 16px 20px 0; background: #131518; border: 1px solid #23262B; border-radius: 14px; padding: 16px;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 14px;">Estimated 1RM</div>
+              <div style="display: flex; flex-direction: column; gap: 13px;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span style="font-size: 13px;">Bench press</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">102.5<span style="color: #8A9099;"> kg</span> <span style="color: #D7FF3E;">+2.5</span></span>
+                  </div>
+                  <div style="height: 3px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 68%; background: #D7FF3E; border-radius: 2px;"></div></div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span style="font-size: 13px;">Squat</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">147.5<span style="color: #8A9099;"> kg</span> <span style="color: #D7FF3E;">+5.0</span></span>
+                  </div>
+                  <div style="height: 3px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 84%; background: #D7FF3E; border-radius: 2px;"></div></div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span style="font-size: 13px;">Deadlift</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">180.0<span style="color: #8A9099;"> kg</span> <span style="color: #8A9099;">—</span></span>
+                  </div>
+                  <div style="height: 3px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 92%; background: #2C3138; border-radius: 2px;"></div></div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span style="font-size: 13px;">Overhead press</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">62.5<span style="color: #8A9099;"> kg</span> <span style="color: #E4674A;">−2.5</span></span>
+                  </div>
+                  <div style="height: 3px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 44%; background: #2C3138; border-radius: 2px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin: 16px 20px 0; background: #131518; border: 1px solid #23262B; border-radius: 14px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+                <div style="font-size: 14px; font-weight: 600;">Muscle group split</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099;">SETS / WK</div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 9px; font-size: 13px;">
+                <div style="display: grid; grid-template-columns: 78px 1fr 34px; align-items: center; gap: 10px;">
+                  <span style="color: #8A9099;">Chest</span>
+                  <div style="height: 8px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 82%; background: #D7FF3E; border-radius: 2px;"></div></div>
+                  <span style="font-family: 'JetBrains Mono', monospace; text-align: right;">18</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 78px 1fr 34px; align-items: center; gap: 10px;">
+                  <span style="color: #8A9099;">Back</span>
+                  <div style="height: 8px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 95%; background: #D7FF3E; border-radius: 2px;"></div></div>
+                  <span style="font-family: 'JetBrains Mono', monospace; text-align: right;">21</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 78px 1fr 34px; align-items: center; gap: 10px;">
+                  <span style="color: #8A9099;">Legs</span>
+                  <div style="height: 8px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 72%; background: #2C3138; border-radius: 2px;"></div></div>
+                  <span style="font-family: 'JetBrains Mono', monospace; text-align: right;">16</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 78px 1fr 34px; align-items: center; gap: 10px;">
+                  <span style="color: #8A9099;">Shoulders</span>
+                  <div style="height: 8px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 45%; background: #2C3138; border-radius: 2px;"></div></div>
+                  <span style="font-family: 'JetBrains Mono', monospace; text-align: right;">10</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 78px 1fr 34px; align-items: center; gap: 10px;">
+                  <span style="color: #8A9099;">Arms</span>
+                  <div style="height: 8px; background: #23262B; border-radius: 2px;"><div style="height: 100%; width: 36%; background: #2C3138; border-radius: 2px;"></div></div>
+                  <span style="font-family: 'JetBrains Mono', monospace; text-align: right;">8</span>
+                </div>
+              </div>
+            </div>
+            <div style="height: 48px;"></div>
+          </div>
+        </x-import>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099; letter-spacing: 0.08em;">03 / EXERCISE LIBRARY</div>
+        <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+          <div style="height: 100%; overflow: auto; background: #0A0B0C; color: #F2F3F5; font-family: Archivo, system-ui;">
+            <div style="padding: 62px 20px 14px;">
+              <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em;">Exercises</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 14px; background: #131518; border: 1px solid #23262B; border-radius: 11px; padding: 11px 13px;">
+                <div style="width: 14px; height: 14px; border: 1.5px solid #8A9099; border-radius: 50%;"></div>
+                <span style="font-size: 15px; color: #8A9099;">Search 148 exercises</span>
+              </div>
+              <div style="display: flex; gap: 7px; margin-top: 12px; flex-wrap: wrap;">
+                <span style="padding: 6px 12px; border-radius: 8px; background: #D7FF3E; color: #0A0B0C; font-size: 13px; font-weight: 600;">Chest</span>
+                <span style="padding: 6px 12px; border-radius: 8px; border: 1px solid #33373D; font-size: 13px; color: #C3C7CC;">Back</span>
+                <span style="padding: 6px 12px; border-radius: 8px; border: 1px solid #33373D; font-size: 13px; color: #C3C7CC;">Legs</span>
+                <span style="padding: 6px 12px; border-radius: 8px; border: 1px solid #33373D; font-size: 13px; color: #C3C7CC;">Arms</span>
+                <span style="padding: 6px 12px; border-radius: 8px; border: 1px solid #33373D; font-size: 13px; color: #C3C7CC;">Core</span>
+              </div>
+            </div>
+
+            <div style="padding: 4px 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">BARBELL</div>
+            <div style="padding: 10px 20px 0; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Bench press</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 82.5 kg × 8 · 4 days ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #D7FF3E;">102.5</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Incline bench press</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 65 kg × 10 · 4 days ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #D7FF3E;">82.0</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Close-grip bench press</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 60 kg × 8 · 3 weeks ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A9099;">74.0</div>
+              </div>
+            </div>
+
+            <div style="padding: 18px 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">DUMBBELL</div>
+            <div style="padding: 10px 20px 0; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Dumbbell press</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 32 kg × 10 · 4 days ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #D7FF3E;">41.0</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Incline dumbbell fly</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 14 kg × 12 · 11 days ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A9099;">19.5</div>
+              </div>
+            </div>
+
+            <div style="padding: 18px 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">MACHINE / CABLE</div>
+            <div style="padding: 10px 20px 0; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Cable crossover</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Last: 22.5 kg × 15 · 4 days ago</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A9099;">—</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 13px; background: #131518; border: 1px solid #23262B; border-radius: 12px; padding: 12px 13px;">
+                <div style="width: 44px; height: 44px; border-radius: 9px; background: #1D2024; border: 1px solid #2C3138;"></div>
+                <div style="flex: 1;">
+                  <div style="font-size: 15px; font-weight: 600;">Pec deck</div>
+                  <div style="font-size: 12px; color: #8A9099; margin-top: 2px;">Never logged</div>
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A9099;">—</div>
+              </div>
+            </div>
+            <div style="height: 56px;"></div>
+          </div>
+        </x-import>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A9099; letter-spacing: 0.08em;">04 / WEB — HISTORY &amp; ANALYSIS</div>
+      <div style="width: 1440px; height: 900px; display: flex; background: #0A0B0C; color: #F2F3F5; border: 1px solid #23262B; border-radius: 12px; overflow: hidden; font-family: Archivo, system-ui;">
+        <div style="width: 216px; border-right: 1px solid #23262B; padding: 22px 16px; display: flex; flex-direction: column; gap: 26px; flex-shrink: 0;">
+          <div style="display: flex; align-items: center; gap: 9px; padding: 0 6px;">
+            <div style="width: 22px; height: 22px; border-radius: 6px; background: #D7FF3E;"></div>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: -0.01em;">LOGBOOK</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="padding: 9px 10px; border-radius: 8px; background: #1B1E22; font-size: 14px; font-weight: 600;">History</div>
+            <div style="padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #8A9099;">Analysis</div>
+            <div style="padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #8A9099;">Programs</div>
+            <div style="padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #8A9099;">Exercises</div>
+            <div style="padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #8A9099;">Body metrics</div>
+            <div style="padding: 9px 10px; border-radius: 8px; font-size: 14px; color: #8A9099;">Settings</div>
+          </div>
+          <div style="margin-top: auto; padding: 12px; border: 1px solid #23262B; border-radius: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099; letter-spacing: 0.08em;">CURRENT BLOCK</div>
+            <div style="font-size: 14px; font-weight: 600; margin-top: 5px;">Hypertrophy · W12/16</div>
+            <div style="height: 3px; background: #23262B; border-radius: 2px; margin-top: 9px;"><div style="height: 100%; width: 75%; background: #D7FF3E; border-radius: 2px;"></div></div>
+          </div>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+          <div style="padding: 20px 28px; border-bottom: 1px solid #23262B; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em;">Training history</div>
+              <div style="font-size: 13px; color: #8A9099; margin-top: 2px;">47 sessions · 12 Feb – 28 Jul 2026</div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="padding: 8px 13px; border: 1px solid #33373D; border-radius: 9px; font-size: 13px; color: #C3C7CC;">Last 12 weeks</div>
+              <div style="padding: 8px 13px; border: 1px solid #33373D; border-radius: 9px; font-size: 13px; color: #C3C7CC;">All lifts</div>
+              <div style="padding: 8px 14px; border-radius: 9px; background: #D7FF3E; color: #0A0B0C; font-size: 13px; font-weight: 700;">Export CSV</div>
+            </div>
+          </div>
+
+          <div style="flex: 1; overflow: hidden; display: grid; grid-template-columns: 1fr 372px;">
+            <div style="padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; overflow: hidden;">
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <div style="border: 1px solid #23262B; border-radius: 11px; padding: 14px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">TOTAL VOLUME</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 500; margin-top: 6px;">18.4 t</div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 11px; padding: 14px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">AVG SESSION</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 500; margin-top: 6px;">58 min</div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 11px; padding: 14px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">SETS LOGGED</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 500; margin-top: 6px;">1,082</div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 11px; padding: 14px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">PRs THIS BLOCK</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 500; margin-top: 6px; color: #D7FF3E;">9</div>
+                </div>
+              </div>
+
+              <div style="border: 1px solid #23262B; border-radius: 12px; padding: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                  <div style="font-size: 14px; font-weight: 600;">Estimated 1RM — Bench press</div>
+                  <div style="display: flex; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A9099;">
+                    <span>90 KG</span><span>105 KG</span>
+                  </div>
+                </div>
+                <div style="position: relative; height: 168px; margin-top: 14px;">
+                  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="height: 1px; background: #1B1E22;"></div>
+                    <div style="height: 1px; background: #1B1E22;"></div>
+                    <div style="height: 1px; background: #1B1E22;"></div>
+                    <div style="height: 1px; background: #1B1E22;"></div>
+                  </div>
+                  <svg viewBox="0 0 640 168" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+                    <polyline points="0,138 58,132 116,120 174,124 232,104 290,96 348,84 406,72 464,78 522,52 580,40 640,24" fill="none" stroke="#D7FF3E" stroke-width="2" stroke-linejoin="round"></polyline>
+                    <polyline points="0,150 58,146 116,138 174,140 232,126 290,118 348,110 406,100 464,104 522,86 580,74 640,60" fill="none" stroke="#3A4048" stroke-width="1.5" stroke-dasharray="4 4"></polyline>
+                  </svg>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099;">
+                  <span>MAY 04</span><span>MAY 25</span><span>JUN 15</span><span>JUL 06</span><span>JUL 27</span>
+                </div>
+              </div>
+
+              <div style="border: 1px solid #23262B; border-radius: 12px; overflow: hidden;">
+                <div style="display: grid; grid-template-columns: 96px 1fr 84px 84px 68px; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #23262B; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">
+                  <span>DATE</span><span>SESSION</span><span>VOLUME</span><span>SETS</span><span>TIME</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 96px 1fr 84px 84px 68px; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #1B1E22; font-size: 13px; align-items: center;">
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">28 JUL</span>
+                  <span>Pull B <span style="color: #D7FF3E; font-family: 'JetBrains Mono', monospace; font-size: 11px;">· 2 PR</span></span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">6,420 kg</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">24</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">1:04</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 96px 1fr 84px 84px 68px; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #1B1E22; font-size: 13px; align-items: center;">
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">26 JUL</span>
+                  <span>Legs A</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">9,180 kg</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">21</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">1:12</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 96px 1fr 84px 84px 68px; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #1B1E22; font-size: 13px; align-items: center;">
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">24 JUL</span>
+                  <span>Push A</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">5,860 kg</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">22</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">0:56</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 96px 1fr 84px 84px 68px; gap: 12px; padding: 13px 16px; font-size: 13px; align-items: center;">
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">22 JUL</span>
+                  <span>Pull A <span style="color: #D7FF3E; font-family: 'JetBrains Mono', monospace; font-size: 11px;">· 1 PR</span></span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">6,010 kg</span>
+                  <span style="font-family: 'JetBrains Mono', monospace;">23</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; color: #8A9099;">0:59</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-left: 1px solid #23262B; padding: 24px; display: flex; flex-direction: column; gap: 18px; overflow: hidden;">
+              <div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">SELECTED SESSION</div>
+                <div style="font-size: 18px; font-weight: 700; margin-top: 6px;">Pull B — 28 Jul 2026</div>
+                <div style="font-size: 13px; color: #8A9099; margin-top: 2px;">18:40 – 19:44 · RPE avg 8.2</div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="border: 1px solid #23262B; border-radius: 10px; padding: 13px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <span style="font-size: 14px; font-weight: 600;">Deadlift</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #D7FF3E;">PR</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">140×5</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">150×5</span>
+                    <span style="padding: 5px 8px; background: rgba(215,255,62,0.14); color: #D7FF3E; border-radius: 6px;">160×5</span>
+                  </div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 10px; padding: 13px;">
+                  <div style="font-size: 14px; font-weight: 600;">Pull-up (weighted)</div>
+                  <div style="display: flex; gap: 6px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">+10×8</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">+10×7</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">+10×6</span>
+                  </div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 10px; padding: 13px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <span style="font-size: 14px; font-weight: 600;">Barbell row</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #D7FF3E;">PR</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">80×10</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">85×9</span>
+                    <span style="padding: 5px 8px; background: rgba(215,255,62,0.14); color: #D7FF3E; border-radius: 6px;">90×8</span>
+                  </div>
+                </div>
+                <div style="border: 1px solid #23262B; border-radius: 10px; padding: 13px;">
+                  <div style="font-size: 14px; font-weight: 600;">Face pull</div>
+                  <div style="display: flex; gap: 6px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">25×15</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">25×15</span>
+                    <span style="padding: 5px 8px; background: #1B1E22; border-radius: 6px;">25×13</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: auto; border-top: 1px solid #23262B; padding-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">VOLUME</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 17px; margin-top: 4px;">6,420 kg</div>
+                </div>
+                <div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8A9099; letter-spacing: 0.1em;">VS LAST PULL B</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 17px; margin-top: 4px; color: #D7FF3E;">+4.1%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;restSeconds&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:90,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:30,&quot;max&quot;:300,&quot;step&quot;:15,&quot;unit&quot;:&quot;s&quot;,&quot;section&quot;:&quot;Session&quot;}}">
+class Component extends DCLogic {
+  state = {
+    sec: 2538,
+    rest: 0,
+    ex: [
+      { name: 'Bench press', target: 'Chest · Barbell', tag: 'RPE 8', sets: [
+        { w: '82.5 kg', r: '8 reps', done: true }, { w: '82.5 kg', r: '8 reps', done: true },
+        { w: '82.5 kg', r: '7 reps', done: true }, { w: '80 kg', r: '8 reps', done: false } ] },
+      { name: 'Incline dumbbell press', target: 'Chest · Dumbbell', tag: 'RPE 8', sets: [
+        { w: '32 kg', r: '10 reps', done: true }, { w: '32 kg', r: '10 reps', done: true },
+        { w: '32 kg', r: '9 reps', done: false } ] },
+      { name: 'Overhead press', target: 'Shoulders · Barbell', tag: 'RPE 7', sets: [
+        { w: '47.5 kg', r: '8 reps', done: true }, { w: '47.5 kg', r: '8 reps', done: false },
+        { w: '47.5 kg', r: '8 reps', done: false } ] },
+      { name: 'Cable crossover', target: 'Chest · Cable', tag: 'RPE 9', sets: [
+        { w: '22.5 kg', r: '15 reps', done: false }, { w: '22.5 kg', r: '15 reps', done: false },
+        { w: '22.5 kg', r: '15 reps', done: false } ] },
+      { name: 'Triceps rope pushdown', target: 'Triceps · Cable', tag: 'RPE 9', sets: [
+        { w: '30 kg', r: '12 reps', done: false }, { w: '30 kg', r: '12 reps', done: false },
+        { w: '30 kg', r: '12 reps', done: false } ] }
+    ]
+  };
+
+  componentDidMount() {
+    this.t = setInterval(() => this.setState(s => ({
+      sec: s.sec + 1, rest: s.rest > 0 ? s.rest - 1 : 0
+    })), 1000);
+  }
+  componentWillUnmount() { clearInterval(this.t); }
+
+  restTotal() { return this.props.restSeconds ?? 90; }
+
+  toggle(i, j) {
+    this.setState(s => {
+      const ex = s.ex.map((e, ii) => ii !== i ? e : { ...e, sets: e.sets.map((st, jj) => jj !== j ? st : { ...st, done: !st.done }) });
+      const started = !s.ex[i].sets[j].done;
+      return { ex, rest: started ? this.restTotal() : s.rest };
+    });
+  }
+
+  addSet(i) {
+    this.setState(s => ({
+      ex: s.ex.map((e, ii) => {
+        if (ii !== i) return e;
+        const last = e.sets[e.sets.length - 1] || { w: '— kg', r: '— reps' };
+        return { ...e, sets: [...e.sets, { w: last.w, r: last.r, done: false }] };
+      })
+    }));
+  }
+
+  hms(n) {
+    const p = v => String(v).padStart(2, '0');
+    return p(Math.floor(n / 3600)) + ':' + p(Math.floor(n / 60) % 60) + ':' + p(n % 60);
+  }
+
+  renderVals() {
+    const A = '#D7FF3E', total = this.restTotal();
+    const exercises = this.state.ex.map((e, i) => ({
+      name: e.name, target: e.target, tag: e.tag,
+      tagColor: '#8A9099',
+      onAddSet: () => this.addSet(i),
+      sets: e.sets.map((s, j) => ({
+        n: String(j + 1), weight: s.w, reps: s.r,
+        bg: s.done ? 'rgba(215,255,62,0.07)' : '#1A1D21',
+        border: s.done ? 'rgba(215,255,62,0.32)' : '#23262B',
+        fg: s.done ? '#F2F3F5' : '#8A9099',
+        boxBg: s.done ? A : 'transparent',
+        boxBorder: s.done ? A : '#3A4048',
+        mark: s.done ? '✓' : '',
+        onToggle: () => this.toggle(i, j)
+      }))
+    }));
+    const all = this.state.ex.flatMap(e => e.sets);
+    const done = all.filter(s => s.done).length;
+    const resting = this.state.rest > 0;
+    return {
+      exercises, elapsed: this.hms(this.state.sec),
+      setsDone: String(done), setsTotal: String(all.length),
+      pct: Math.round((done / all.length) * 100) + '%',
+      restLabel: resting ? Math.floor(this.state.rest / 60) + ':' + String(this.state.rest % 60).padStart(2, '0') : '—',
+      restPct: resting ? Math.round((this.state.rest / total) * 100) + '%' : '0%',
+      restColor: resting ? A : '#8A9099',
+      restBorder: resting ? 'rgba(215,255,62,0.32)' : '#23262B',
+      addExercise: () => this.setState(s => ({
+        ex: [...s.ex, { name: 'New exercise', target: 'Tap to pick from library', tag: '', sets: [{ w: '— kg', r: '— reps', done: false }] }]
+      }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>
