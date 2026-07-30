@@ -304,6 +304,26 @@ END $EF$;
 COMMIT;
 
 START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260731090000_RepairEarlyWorkoutCompletion') THEN
+    UPDATE training."Workouts"
+    SET "Status" = 0, "StartedAt" = NULL, "CompletedAt" = NULL, "Version" = "Version" + 1, "UpdatedAt" = NOW()
+    WHERE "Status" = 2 AND "CompletedAt"::date < "ScheduledAt"::date;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260731090000_RepairEarlyWorkoutCompletion') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260731090000_RepairEarlyWorkoutCompletion', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
 DO $EF$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN

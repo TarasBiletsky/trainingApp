@@ -21,6 +21,10 @@ try {
     $choices = @($bootstrap.exercises | Select-Object -First 2)
     if ($choices.Count -lt 2) { throw 'Two exercises are required for the editor smoke test.' }
     $workout = Send 'workouts/' 'POST' @{ name = 'Workout editor verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddHours(1).ToString('o'); notes = 'automatic smoke test' }
+    $duplicateRejected = $false
+    try { Send 'workouts/' 'POST' @{ name = 'Duplicate workout verification'; scheduledAt = $workout.scheduledAt; notes = 'must be rejected' } | Out-Null }
+    catch { if ($_.Exception.Response.StatusCode.value__ -eq 409) { $duplicateRejected = $true } else { throw } }
+    if (!$duplicateRejected) { throw 'A second workout on the same day was accepted.' }
     $exercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
     $secondExercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[1].id; order = 2; notes = ''; restSeconds = 90; weightMultiplier = 1 }
     Send "workouts/$($workout.id)/exercises/$($secondExercise.id)" 'DELETE' | Out-Null

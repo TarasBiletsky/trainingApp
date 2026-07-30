@@ -12,6 +12,8 @@
 - Choosing a template fills the scheduling form and waits for explicit creation.
 - Empty workout days use a focused start screen; blank and template workouts open in the same full editor.
 - Mobile week and month calendars stack days vertically without horizontal clipping.
+- Home and workout lifecycle use the browser's local day instead of the server's UTC day.
+- The API rejects a second workout on the same local calendar day.
 
 ## Deferred iOS parity
 
