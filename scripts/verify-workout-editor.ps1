@@ -49,6 +49,8 @@ try {
     Send "workouts/$($workout.id)/exercises/$($exercise.id)" 'DELETE' | Out-Null
     $afterExerciseDelete = Send "workouts/$($workout.id)" 'GET'
     if ($afterExerciseDelete.exercises.Count -ne 0) { throw 'Exercise was not deleted.' }
+    Send "workouts/$($workout.id)" 'DELETE' | Out-Null
+    $workout = $null
     $futureWorkout = Send 'workouts/' 'POST' @{ name = 'Future workout verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddDays(2).ToString('o'); notes = 'automatic smoke test' }
     $futureExercise = Send "workouts/$($futureWorkout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
     $futureSet = Send "workouts/$($futureWorkout.id)/exercises/$($futureExercise.id)/sets" 'POST' @{ order = 1; plannedWeightKg = 50; plannedReps = 8; isWarmup = $false }
