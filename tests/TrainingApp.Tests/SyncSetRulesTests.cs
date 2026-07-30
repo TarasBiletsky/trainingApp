@@ -42,6 +42,6 @@ public sealed class SyncSetRulesTests
         Assert.Equal("\"InProgress\"", JsonSerializer.Serialize(WorkoutStatus.InProgress, options));
     }
 
-    private static SetEntry Entry() => new() { Order = 1, Status = SetStatus.Completed, PlannedWeightKg = 60, PlannedReps = 8, PlannedRpe = 7, ActualWeightKg = 60, ActualReps = 8, ActualRpe = 7.5m, Notes = "offline" };
-    private static SetWrite Write(int actualReps = 8, DateTimeOffset? completedAt = null) => new(null, 1, 60, 8, 7, 60, actualReps, 7.5m, false, "offline", null, SetStatus.Completed, completedAt);
+    private static SetEntry Entry() => new() { Order = 1, Status = SetStatus.Completed, PlannedWeightKg = 60, PlannedReps = 8, ActualWeightKg = 60, ActualReps = 8, Notes = "offline" };
+    private static SetWrite Write(int actualReps = 8, DateTimeOffset? completedAt = null) => new(null, 1, 60, 8, 60, actualReps, false, "offline", null, SetStatus.Completed, completedAt);
 }

@@ -449,6 +449,28 @@
         }
       }
     },
+    "/api/v1/users/me/preferences": {
+      "put": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPreferencesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/users/me/password": {
       "put": {
         "tags": [
@@ -469,16 +491,6 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/v1/users/me/preferences": {
-      "put": {
-        "tags": ["TrainingApp.Api"],
-        "requestBody": {
-          "required": true,
-          "content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserPreferencesRequest"}}}
-        },
-        "responses": {"200": {"description": "OK", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserResponse"}}}}, "400": {"description": "Bad Request"}}
       }
     },
     "/api/v1/users": {
@@ -976,6 +988,36 @@
             "description": "OK"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "parameters": [
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "workoutExerciseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/v1/workouts/{workoutId}/exercises/{workoutExerciseId}/sets": {
@@ -1106,6 +1148,48 @@
       }
     },
     "/api/v1/workouts/{workoutId}/sets/{setId}/complete": {
+      "post": {
+        "tags": [
+          "TrainingApp.Api"
+        ],
+        "parameters": [
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "setId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/workouts/{workoutId}/sets/{setId}/uncomplete": {
       "post": {
         "tags": [
           "TrainingApp.Api"
@@ -1720,11 +1804,6 @@
             "format": "int32",
             "nullable": true
           },
-          "plannedRpe": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "actualWeightKg": {
             "type": "number",
             "format": "double",
@@ -1733,11 +1812,6 @@
           "actualReps": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
-          },
-          "actualRpe": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           },
           "isWarmup": {
@@ -1814,11 +1888,6 @@
             "format": "int32",
             "nullable": true
           },
-          "plannedRpe": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "actualWeightKg": {
             "type": "number",
             "format": "double",
@@ -1827,11 +1896,6 @@
           "actualReps": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
-          },
-          "actualRpe": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           },
           "isWarmup": {
@@ -1984,11 +2048,6 @@
             "format": "int32",
             "nullable": true
           },
-          "rpe": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "isWarmup": {
             "type": "boolean"
           }
@@ -2015,11 +2074,6 @@
           "reps": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
-          },
-          "rpe": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           },
           "isWarmup": {
@@ -2129,8 +2183,12 @@
       },
       "UserPreferencesRequest": {
         "type": "object",
-        "required": ["colorTheme"],
-        "properties": {"colorTheme": {"type": "string", "enum": ["purple", "toxic", "red"]}},
+        "properties": {
+          "colorTheme": {
+            "type": "string",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "UserResponse": {
@@ -2152,7 +2210,7 @@
           },
           "colorTheme": {
             "type": "string",
-            "enum": ["purple", "toxic", "red"]
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

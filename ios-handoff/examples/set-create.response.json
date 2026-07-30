@@ -1,4 +1,4 @@
-﻿{
+{
     "id":  "57e9ff52-85b2-4e07-bf34-7fedd21e7ca2",
     "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
     "workoutExercise":  {
@@ -19,10 +19,8 @@
     "status":  "Planned",
     "plannedWeightKg":  60,
     "plannedReps":  8,
-    "plannedRpe":  7,
     "actualWeightKg":  null,
     "actualReps":  null,
-    "actualRpe":  null,
     "isWarmup":  false,
     "completedAt":  null,
     "notes":  "Direct set endpoint",

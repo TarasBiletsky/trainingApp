@@ -60,10 +60,8 @@ public sealed class SetEntry
     public SetStatus Status { get; set; } = SetStatus.Planned;
     public decimal? PlannedWeightKg { get; set; }
     public int? PlannedReps { get; set; }
-    public decimal? PlannedRpe { get; set; }
     public decimal? ActualWeightKg { get; set; }
     public int? ActualReps { get; set; }
-    public decimal? ActualRpe { get; set; }
     public bool IsWarmup { get; set; }
     public DateTimeOffset? CompletedAt { get; set; }
     public string? Notes { get; set; }
@@ -88,7 +86,7 @@ public sealed class TemplateExercise
 public sealed class TemplateSet
 {
     public Guid Id { get; set; } = Guid.NewGuid(); public Guid TemplateExerciseId { get; set; } public TemplateExercise? TemplateExercise { get; set; }
-    public int Order { get; set; } public decimal? WeightKg { get; set; } public int? Reps { get; set; } public decimal? Rpe { get; set; } public bool IsWarmup { get; set; }
+    public int Order { get; set; } public decimal? WeightKg { get; set; } public int? Reps { get; set; } public bool IsWarmup { get; set; }
 }
 
 public sealed class HealthSample

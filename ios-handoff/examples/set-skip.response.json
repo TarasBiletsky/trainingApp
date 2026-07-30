@@ -1,4 +1,4 @@
-﻿{
+{
     "id":  "78cbd4fd-9430-4fbd-9342-7db390b16dbc",
     "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
     "workoutExercise":  {
@@ -34,10 +34,8 @@
     "status":  "Skipped",
     "plannedWeightKg":  70,
     "plannedReps":  3,
-    "plannedRpe":  8,
     "actualWeightKg":  null,
     "actualReps":  null,
-    "actualRpe":  null,
     "isWarmup":  false,
     "completedAt":  null,
     "notes":  "Skip action verification",

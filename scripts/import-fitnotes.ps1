@@ -107,7 +107,7 @@ foreach ($date in $dates) {
             $weight = Sql-Number $set.'Weight (kg)'
             $reps = if ([string]::IsNullOrWhiteSpace($set.Reps)) { 'NULL' } else { [int]$set.Reps }
             $notes = Sql-Text $set.Notes
-            $sql.Add(('INSERT INTO training."SetEntries" ("Id","WorkoutExerciseId","Order","Status","PlannedWeightKg","PlannedReps","PlannedRpe","ActualWeightKg","ActualReps","ActualRpe","IsWarmup","CompletedAt","Notes","UpdatedAt","Version") VALUES ({0},{1},{2},1,NULL,NULL,NULL,{3},{4},NULL,FALSE,{5},{6},{5},1) ON CONFLICT ("Id") DO NOTHING;' -f (Sql-Text $setId), (Sql-Text $workoutExerciseId), $setOrder, $weight, $reps, (Sql-Text $timestamp), $notes))
+            $sql.Add(('INSERT INTO training."SetEntries" ("Id","WorkoutExerciseId","Order","Status","PlannedWeightKg","PlannedReps","ActualWeightKg","ActualReps","IsWarmup","CompletedAt","Notes","UpdatedAt","Version") VALUES ({0},{1},{2},1,NULL,NULL,{3},{4},FALSE,{5},{6},{5},1) ON CONFLICT ("Id") DO NOTHING;' -f (Sql-Text $setId), (Sql-Text $workoutExerciseId), $setOrder, $weight, $reps, (Sql-Text $timestamp), $notes))
         }
     }
 }

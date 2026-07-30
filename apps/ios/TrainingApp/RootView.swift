@@ -25,6 +25,7 @@ struct RootView: View {
     private var currentWorkout: Workout? {
         workouts.first { $0.status == .inProgress }
             ?? workouts.first { $0.status == .planned && Calendar.current.isDateInToday($0.scheduledAt) }
+            ?? workouts.first { $0.status == .completed && Calendar.current.isDateInToday($0.scheduledAt) }
     }
 
     var body: some View {
@@ -206,22 +207,15 @@ struct WorkoutView: View {
     @AppStorage("apiBaseURL") private var baseURL = "http://192.168.31.45:8181/api/v1/"
     @Bindable var workout: Workout
     var exerciseOptions: [ExerciseDTO] = []
+    @State private var fetchedExerciseOptions: [ExerciseDTO] = []
     @State private var errorMessage: String?
 
     var body: some View {
         List {
             Section {
                 TextField("Workout name", text: $workout.name)
-                Button {
-                    Task { await changeWorkoutStatus() }
-                } label: {
-                    Text(workout.status == .inProgress ? "Complete workout" : "Start workout")
-                        .frame(maxWidth: .infinity, minHeight: 32)
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle(radius: 7))
-                .tint(.trainingLime)
-                .foregroundStyle(.black)
+                    .submitLabel(.done)
+                    .onSubmit { Task { await saveWorkout() } }
             }
 
             ForEach(workout.exercises.sorted(by: { $0.order < $1.order })) { exercise in
@@ -232,7 +226,7 @@ struct WorkoutView: View {
                     ))
                     ForEach(exercise.sets.sorted(by: { $0.order < $1.order })) { set in
                         SetRow(set: set,
-                               onComplete: { await completeSet(set) })
+                               onComplete: { await toggleSet(set) })
                             .swipeActions {
                                 Button("Delete", systemImage: "trash", role: .destructive) { Task { await removeSet(set) } }
                             }
@@ -246,7 +240,7 @@ struct WorkoutView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 3) {
                             Menu(exercise.name) {
-                                ForEach(exerciseOptions) { option in
+                                ForEach(availableExerciseOptions) { option in
                                     Button(option.name) { Task { await replace(exercise, with: option) } }
                                 }
                             }
@@ -262,7 +256,7 @@ struct WorkoutView: View {
             }
 
             Menu("Add exercise", systemImage: "plus") {
-                ForEach(exerciseOptions) { option in
+                ForEach(availableExerciseOptions) { option in
                     Button(option.name) { Task { await addExercise(option) } }
                 }
             }
@@ -272,12 +266,24 @@ struct WorkoutView: View {
         .scrollContentBackground(.hidden)
         .background(Color.black)
         .refreshable { await refresh() }
+        .task { await loadExerciseOptions() }
     }
 
-    private func changeWorkoutStatus() async {
+    private var availableExerciseOptions: [ExerciseDTO] {
+        exerciseOptions.isEmpty ? fetchedExerciseOptions : exerciseOptions
+    }
+
+    private func loadExerciseOptions() async {
+        guard exerciseOptions.isEmpty, fetchedExerciseOptions.isEmpty else { return }
+        do { fetchedExerciseOptions = try await auth.get("exercises/", baseURL: baseURL) }
+        catch { errorMessage = error.localizedDescription }
+    }
+
+    private func saveWorkout() async {
         await perform {
-            let action = workout.status == .inProgress ? "complete" : "start"
-            try await auth.send("workouts/\(workout.id)/\(action)", method: "POST", baseURL: baseURL)
+            try await auth.send("workouts/\(workout.id)", method: "PUT",
+                                body: WorkoutWriteBody(name: workout.name, scheduledAt: workout.scheduledAt,
+                                                       notes: workout.notes, version: workout.version), baseURL: baseURL)
         }
     }
 
@@ -330,19 +336,18 @@ struct WorkoutView: View {
         }
     }
 
-    private func completeSet(_ set: SetEntry) async {
-        set.actualWeightKg = set.actualWeightKg ?? set.plannedWeightKg
-        set.actualReps = set.actualReps ?? set.plannedReps
-        await write(set, complete: true)
-    }
-
-    private func write(_ set: SetEntry, complete: Bool) async {
+    private func toggleSet(_ set: SetEntry) async {
+        let completed = set.status == .completed
+        if !completed {
+            set.actualWeightKg = set.actualWeightKg ?? set.plannedWeightKg
+            set.actualReps = set.actualReps ?? set.plannedReps
+        }
         let body = SetWriteBody(order: set.order, plannedWeightKg: set.plannedWeightKg, plannedReps: set.plannedReps,
                                 actualWeightKg: set.actualWeightKg, actualReps: set.actualReps, isWarmup: set.isWarmup,
-                                version: set.version, completedAt: complete ? .now : set.completedAt)
+                                version: set.version, completedAt: completed ? nil : .now)
         await perform {
-            let suffix = complete ? "/complete" : ""
-            try await auth.send("workouts/\(workout.id)/sets/\(set.id)\(suffix)", method: complete ? "POST" : "PUT", body: body, baseURL: baseURL)
+            let action = completed ? "uncomplete" : "complete"
+            try await auth.send("workouts/\(workout.id)/sets/\(set.id)/\(action)", method: "POST", body: body, baseURL: baseURL)
         }
     }
 
@@ -353,7 +358,9 @@ struct WorkoutView: View {
 
     private func refresh() async {
         do {
-            let response = try await auth.bootstrap(baseURL: baseURL)
+            if availableExerciseOptions.isEmpty { await loadExerciseOptions() }
+            let remote: WorkoutDTO = try await auth.get("workouts/\(workout.id)", baseURL: baseURL)
+            let response = BootstrapResponse(workout: remote, exercises: availableExerciseOptions, lastHealthSyncAt: nil)
             try BootstrapImporter.importResponse(response, into: context)
             errorMessage = nil
         } catch { errorMessage = error.localizedDescription }
@@ -384,10 +391,6 @@ private struct SetRow: View {
             .foregroundStyle(set.status == .completed ? Color.trainingLime : .secondary)
             .frame(width: 34, height: 44)
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 6)
-        .background(set.status == .completed ? Color.trainingLime.opacity(0.14) : Color.clear, in: .rect(cornerRadius: 9))
-        .overlay { RoundedRectangle(cornerRadius: 9).stroke(set.status == .completed ? Color.trainingLime.opacity(0.65) : Color.clear) }
     }
 
     private func compactField(_ label: String, value: Binding<Int?>, keyboard: UIKeyboardType) -> some View {

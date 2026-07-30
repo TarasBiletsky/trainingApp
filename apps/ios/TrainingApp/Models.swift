@@ -81,10 +81,8 @@ final class SetEntry {
     var statusRaw: String
     var plannedWeightKg: Double?
     var plannedReps: Int?
-    var plannedRPE: Double?
     var actualWeightKg: Double?
     var actualReps: Int?
-    var actualRPE: Double?
     var isWarmup: Bool
     var completedAt: Date?
     var notes: String

@@ -1,4 +1,4 @@
-﻿{
+{
     "id":  "57e9ff52-85b2-4e07-bf34-7fedd21e7ca2",
     "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
     "workoutExercise":  {
@@ -34,10 +34,8 @@
     "status":  "Completed",
     "plannedWeightKg":  60,
     "plannedReps":  8,
-    "plannedRpe":  7,
     "actualWeightKg":  60,
     "actualReps":  8,
-    "actualRpe":  7.5,
     "isWarmup":  false,
     "completedAt":  "2026-07-30T11:09:09.8501253+00:00",
     "notes":  "Completed through set action",

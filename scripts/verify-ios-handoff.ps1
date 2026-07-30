@@ -48,7 +48,7 @@ $exerciseResponse = Invoke-Json "$baseUrl/workouts/$workoutId/exercises" 'Post' 
 Save-Json 'workout-exercise-create.request.json' $exerciseRequest
 Save-Json 'workout-exercise-create.response.json' $exerciseResponse
 
-$plannedSetRequest = [ordered]@{ id=$plannedSetId; order=1; plannedWeightKg=60; plannedReps=8; plannedRpe=7; actualWeightKg=$null; actualReps=$null; actualRpe=$null; isWarmup=$false; notes='Direct set endpoint'; version=$null; status='Planned' }
+$plannedSetRequest = [ordered]@{ id=$plannedSetId; order=1; plannedWeightKg=60; plannedReps=8; actualWeightKg=$null; actualReps=$null; isWarmup=$false; notes='Direct set endpoint'; version=$null; status='Planned' }
 $plannedSet = Invoke-Json "$baseUrl/workouts/$workoutId/exercises/$workoutExerciseId/sets" 'Post' $plannedSetRequest
 Save-Json 'set-create.request.json' $plannedSetRequest
 Save-Json 'set-create.response.json' $plannedSet
@@ -58,12 +58,12 @@ Save-Json 'workout-start.response.json' $startedWorkout
 $bootstrap = Invoke-Json "$baseUrl/bootstrap"
 Save-Json 'bootstrap.response.json' $bootstrap
 
-$completeSetRequest = [ordered]@{ id=$plannedSetId; order=1; plannedWeightKg=60; plannedReps=8; plannedRpe=7; actualWeightKg=60; actualReps=8; actualRpe=7.5; isWarmup=$false; notes='Completed through set action'; version=$plannedSet.version; status='Completed' }
+$completeSetRequest = [ordered]@{ id=$plannedSetId; order=1; plannedWeightKg=60; plannedReps=8; actualWeightKg=60; actualReps=8; isWarmup=$false; notes='Completed through set action'; version=$plannedSet.version; status='Completed' }
 $completedSet = Invoke-Json "$baseUrl/workouts/$workoutId/sets/$plannedSetId/complete" 'Post' $completeSetRequest
 Save-Json 'set-complete.request.json' $completeSetRequest
 Save-Json 'set-complete.response.json' $completedSet
 
-$syncCreateRequest = @([ordered]@{ id=$syncSetId; workoutExerciseId=$workoutExerciseId; expectedVersion=0; value=[ordered]@{ id=$syncSetId; order=2; plannedWeightKg=65; plannedReps=5; plannedRpe=8; actualWeightKg=65; actualReps=5; actualRpe=8; isWarmup=$false; notes='Client-generated UUID'; version=$null; status='Completed'; completedAt=$offlineCompletedAt.ToString('o') } })
+$syncCreateRequest = @([ordered]@{ id=$syncSetId; workoutExerciseId=$workoutExerciseId; expectedVersion=0; value=[ordered]@{ id=$syncSetId; order=2; plannedWeightKg=65; plannedReps=5; actualWeightKg=65; actualReps=5; isWarmup=$false; notes='Client-generated UUID'; version=$null; status='Completed'; completedAt=$offlineCompletedAt.ToString('o') } })
 $syncCreated = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncCreateRequest
 Save-Json 'sync-create.request.json' $syncCreateRequest
 Save-Json 'sync-create.response.json' $syncCreated
@@ -71,7 +71,7 @@ Save-Json 'sync-create.response.json' $syncCreated
 $syncRetry = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncCreateRequest
 Save-Json 'sync-retry.response.json' $syncRetry
 
-$syncUpdateRequest = @([ordered]@{ id=$syncSetId; workoutExerciseId=$workoutExerciseId; expectedVersion=1; value=[ordered]@{ id=$syncSetId; order=2; plannedWeightKg=65; plannedReps=5; plannedRpe=8; actualWeightKg=67.5; actualReps=5; actualRpe=8.5; isWarmup=$false; notes='Updated by sync'; version=1; status='Completed'; completedAt=$offlineCompletedAt.ToString('o') } })
+$syncUpdateRequest = @([ordered]@{ id=$syncSetId; workoutExerciseId=$workoutExerciseId; expectedVersion=1; value=[ordered]@{ id=$syncSetId; order=2; plannedWeightKg=65; plannedReps=5; actualWeightKg=67.5; actualReps=5; isWarmup=$false; notes='Updated by sync'; version=1; status='Completed'; completedAt=$offlineCompletedAt.ToString('o') } })
 $syncUpdated = Invoke-Json "$baseUrl/workouts/sync" 'Post' $syncUpdateRequest
 Save-Json 'sync-update.request.json' $syncUpdateRequest
 Save-Json 'sync-update.response.json' $syncUpdated
@@ -79,7 +79,7 @@ Save-Json 'sync-update.response.json' $syncUpdated
 $syncConflict = Invoke-Conflict "$baseUrl/workouts/sync" $syncUpdateRequest
 Save-Json 'sync-conflict.response-409.json' $syncConflict
 
-$skipCreateRequest = [ordered]@{ id=$skippedSetId; order=3; plannedWeightKg=70; plannedReps=3; plannedRpe=8; actualWeightKg=$null; actualReps=$null; actualRpe=$null; isWarmup=$false; notes='Skip action verification'; version=$null; status='Planned' }
+$skipCreateRequest = [ordered]@{ id=$skippedSetId; order=3; plannedWeightKg=70; plannedReps=3; actualWeightKg=$null; actualReps=$null; isWarmup=$false; notes='Skip action verification'; version=$null; status='Planned' }
 $skipCreated = Invoke-Json "$baseUrl/workouts/$workoutId/exercises/$workoutExerciseId/sets" 'Post' $skipCreateRequest
 $skippedSet = Invoke-Json "$baseUrl/workouts/$workoutId/sets/$skippedSetId/skip" 'Post'
 Save-Json 'set-skip.response.json' $skippedSet

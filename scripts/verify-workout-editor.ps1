@@ -28,13 +28,25 @@ try {
     $afterReplace = Send "workouts/$($workout.id)" 'GET'
     if ($afterReplace.exercises[0].exerciseId -ne $choices[1].id) { throw 'Exercise replacement was not persisted.' }
     if (Compare-Object $setIds @($afterReplace.exercises[0].sets.id)) { throw 'Exercise replacement changed the existing sets.' }
+    $firstSet = $afterReplace.exercises[0].sets[0]
+    Send "workouts/$($workout.id)/sets/$($firstSet.id)/complete" 'POST' @{ order=$firstSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$firstSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    $afterFirstSet = Send "workouts/$($workout.id)" 'GET'
+    if ($afterFirstSet.status -ne 'InProgress') { throw 'Completing the first set did not start the workout.' }
+    $secondSet = $afterFirstSet.exercises[0].sets[1]
+    Send "workouts/$($workout.id)/sets/$($secondSet.id)/complete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    $afterLastSet = Send "workouts/$($workout.id)" 'GET'
+    if ($afterLastSet.status -ne 'Completed') { throw 'Completing the last set did not finish the workout.' }
+    $secondSet = $afterLastSet.exercises[0].sets[1]
+    Send "workouts/$($workout.id)/sets/$($secondSet.id)/uncomplete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version } | Out-Null
+    $afterUndo = Send "workouts/$($workout.id)" 'GET'
+    if ($afterUndo.status -ne 'InProgress' -or $afterUndo.exercises[0].sets[1].status -ne 'Planned') { throw 'Undoing a set did not reopen the workout.' }
     Send "workouts/$($workout.id)/sets/$($setIds[-1])" 'DELETE' | Out-Null
     $afterDelete = Send "workouts/$($workout.id)" 'GET'
     if ($afterDelete.exercises[0].sets.Count -ne 1) { throw 'Set count did not decrease.' }
     Send "workouts/$($workout.id)/exercises/$($exercise.id)" 'DELETE' | Out-Null
     $afterExerciseDelete = Send "workouts/$($workout.id)" 'GET'
     if ($afterExerciseDelete.exercises.Count -ne 0) { throw 'Exercise was not deleted.' }
-    Write-Output 'Workout editor verification passed: replacement preserved sets; set and exercise deletion succeeded.'
+    Write-Output 'Workout editor verification passed: editing, automatic lifecycle, undo, and deletion succeeded.'
 }
 finally {
     if ($null -ne $workout) {

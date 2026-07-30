@@ -1,4 +1,4 @@
-﻿{
+{
     "workout":  {
                     "id":  "84f482db-a252-4539-9744-45b778ff2a88",
                     "name":  "iOS Handoff Verification",
@@ -46,10 +46,8 @@
                                                            "status":  "Planned",
                                                            "plannedWeightKg":  60,
                                                            "plannedReps":  8,
-                                                           "plannedRpe":  7,
                                                            "actualWeightKg":  null,
                                                            "actualReps":  null,
-                                                           "actualRpe":  null,
                                                            "isWarmup":  false,
                                                            "completedAt":  null,
                                                            "notes":  "Direct set endpoint",

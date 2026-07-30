@@ -304,6 +304,18 @@ END $EF$;
 COMMIT;
 
 START TRANSACTION;
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
+        ALTER TABLE training."TemplateSets" DROP COLUMN "Rpe";
+        ALTER TABLE training."SetEntries" DROP COLUMN "ActualRpe";
+        ALTER TABLE training."SetEntries" DROP COLUMN "PlannedRpe";
+        INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20260730190000_RemoveRpe', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
 
 DO $EF$
 BEGIN

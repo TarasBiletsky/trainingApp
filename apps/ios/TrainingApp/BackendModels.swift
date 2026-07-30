@@ -41,10 +41,8 @@ struct SetEntryDTO: Decodable {
     let status: String
     let plannedWeightKg: Double?
     let plannedReps: Int?
-    let plannedRpe: Double?
     let actualWeightKg: Double?
     let actualReps: Int?
-    let actualRpe: Double?
     let isWarmup: Bool
     let completedAt: Date?
     let notes: String?
@@ -102,10 +100,8 @@ enum BootstrapImporter {
                 set.statusRaw = remoteSet.status.lowercasingFirstLetter
                 set.plannedWeightKg = remoteSet.plannedWeightKg
                 set.plannedReps = remoteSet.plannedReps
-                set.plannedRPE = remoteSet.plannedRpe
                 set.actualWeightKg = remoteSet.actualWeightKg
                 set.actualReps = remoteSet.actualReps
-                set.actualRPE = remoteSet.actualRpe
                 set.isWarmup = remoteSet.isWarmup
                 set.completedAt = remoteSet.completedAt
                 set.notes = remoteSet.notes ?? ""

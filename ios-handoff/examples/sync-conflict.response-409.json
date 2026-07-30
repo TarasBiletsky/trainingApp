@@ -1,4 +1,4 @@
-﻿{
+{
     "id":  "3c7db718-53ed-4083-91c3-fef8a3f09350",
     "status":  "conflict",
     "version":  2,
@@ -38,10 +38,8 @@
                     "status":  "Completed",
                     "plannedWeightKg":  65,
                     "plannedReps":  5,
-                    "plannedRpe":  8,
                     "actualWeightKg":  67.5,
                     "actualReps":  5,
-                    "actualRpe":  8.5,
                     "isWarmup":  false,
                     "completedAt":  "2026-07-30T10:54:09.142793+00:00",
                     "notes":  "Client-generated UUID",

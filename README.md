@@ -74,7 +74,7 @@ Content-Type: application/json
     "expectedVersion": 1,
     "value": {
       "order": 1, "actualWeightKg": 100, "actualReps": 5,
-      "actualRpe": 8.5, "isWarmup": false, "status": "Completed",
+      "isWarmup": false, "status": "Completed",
       "version": 1
     }
   }

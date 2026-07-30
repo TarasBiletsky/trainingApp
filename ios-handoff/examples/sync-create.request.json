@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "id":  "3c7db718-53ed-4083-91c3-fef8a3f09350",
         "workoutExerciseId":  "81c54541-7d68-4c33-8cba-dbc026d65568",
@@ -8,10 +8,8 @@
                       "order":  2,
                       "plannedWeightKg":  65,
                       "plannedReps":  5,
-                      "plannedRpe":  8,
                       "actualWeightKg":  65,
                       "actualReps":  5,
-                      "actualRpe":  8,
                       "isWarmup":  false,
                       "notes":  "Client-generated UUID",
                       "version":  null,

@@ -36,7 +36,7 @@ New-NetFirewallRule -DisplayName "Training API TCP 8181 (Private LAN)" -Directio
 
 ### Workouts и sync
 
-Клиент генерирует UUID до отправки. Изменяемые Workout и SetEntry используют целочисленный `version`; при обновлении передаётся `expectedVersion`. Даты — ISO-8601 UTC, веса/RPE — decimal.
+Клиент генерирует UUID до отправки. Изменяемые Workout и SetEntry используют целочисленный `version`; при обновлении передаётся `expectedVersion`. Даты — ISO-8601 UTC, веса — decimal.
 
 `POST /workouts/sync` принимает массив `SetSyncCommand` с `id`, `workoutExerciseId`, `expectedVersion`, `value`; `value.completedAt` опционален и передаётся как UTC ISO-8601. Для offline completion клиент передаёт фактическое время; если оно отсутствует, сервер использует текущее UTC. Planned/Skipped очищают `completedAt`. Статистика группирует по времени завершения set, а календарь включает workout по `scheduledAt`. Результат sync — массив `{ id, status, version, current }`. Реальные сценарии:
 
