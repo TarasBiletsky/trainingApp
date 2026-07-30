@@ -144,8 +144,11 @@ struct WorkoutView: View {
         List {
             Section {
                 TextField("Workout name", text: $workout.name)
-                Button(workout.status == .inProgress ? "Complete workout" : "Start workout") {
+                Button {
                     Task { await changeWorkoutStatus() }
+                } label: {
+                    Text(workout.status == .inProgress ? "Complete workout" : "Start workout")
+                        .frame(maxWidth: .infinity, minHeight: 32)
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.roundedRectangle(radius: 7))
@@ -174,12 +177,16 @@ struct WorkoutView: View {
                     }
                 } header: {
                     HStack {
-                        Menu(exercise.name) {
-                            ForEach(exerciseOptions) { option in
-                                Button(option.name) { Task { await replace(exercise, with: option) } }
+                        VStack(alignment: .leading, spacing: 3) {
+                            Menu(exercise.name) {
+                                ForEach(exerciseOptions) { option in
+                                    Button(option.name) { Task { await replace(exercise, with: option) } }
+                                }
                             }
+                            .foregroundStyle(Color.trainingLime)
+                            Text("\(exercise.sets.count) sets · \(exercise.restSeconds)s rest")
+                                .font(.caption2).foregroundStyle(.secondary)
                         }
-                        .foregroundStyle(Color.trainingLime)
                         Spacer()
                         Text(exercise.completedVolumeKg, format: .number.precision(.fractionLength(0))) + Text(" kg")
                     }
@@ -280,27 +287,51 @@ private struct SetRow: View {
     let onComplete: () async -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
-            Text("\(set.order + 1)").foregroundStyle(.secondary)
-            TextField("kg", value: Binding(
+        HStack(spacing: 6) {
+            Text("\(set.order + 1)")
+                .font(.caption.monospacedDigit()).foregroundStyle(.secondary).frame(width: 18)
+            compactField("KG", value: Binding(
                 get: { set.actualWeightKg ?? set.plannedWeightKg },
                 set: { set.actualWeightKg = $0 }
-            ), format: .number).keyboardType(.decimalPad).textFieldStyle(.roundedBorder)
-            Text("×")
-            TextField("reps", value: Binding(
+            ), keyboard: .decimalPad)
+            compactField("REPS", value: Binding(
                 get: { set.actualReps ?? set.plannedReps },
                 set: { set.actualReps = $0 }
-            ), format: .number).keyboardType(.numberPad).textFieldStyle(.roundedBorder)
+            ), keyboard: .numberPad)
             Button("Save", systemImage: "square.and.arrow.down") { Task { await onSave() } }
                 .labelStyle(.iconOnly)
                 .foregroundStyle(Color.trainingLime)
+                .frame(width: 34, height: 44)
             Button("Complete set", systemImage: set.status == .completed ? "checkmark.square.fill" : "square") {
                 Task { await onComplete() }
             }
             .labelStyle(.iconOnly)
             .font(.title2)
             .foregroundStyle(set.status == .completed ? Color.trainingLime : .secondary)
+            .frame(width: 34, height: 44)
         }
+    }
+
+    private func compactField(_ label: String, value: Binding<Int?>, keyboard: UIKeyboardType) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label).font(.caption2).foregroundStyle(.secondary)
+            TextField("—", value: value, format: .number)
+                .keyboardType(keyboard).multilineTextAlignment(.center)
+                .padding(.horizontal, 8).frame(minHeight: 38)
+                .background(Color.black.opacity(0.45), in: .rect(cornerRadius: 6))
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func compactField(_ label: String, value: Binding<Double?>, keyboard: UIKeyboardType) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label).font(.caption2).foregroundStyle(.secondary)
+            TextField("—", value: value, format: .number)
+                .keyboardType(keyboard).multilineTextAlignment(.center)
+                .padding(.horizontal, 8).frame(minHeight: 38)
+                .background(Color.black.opacity(0.45), in: .rect(cornerRadius: 6))
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
