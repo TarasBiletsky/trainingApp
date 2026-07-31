@@ -27,4 +27,16 @@ public class WebInterfaceTests
         Assert.Contains("class=\"week-column\"", html);
         Assert.Contains("aria-pressed=", html);
     }
+
+    [Fact]
+    public void WorkoutCardsUseLongPressReorderingWithoutHandleButtons()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.DoesNotContain("class=\"reorder-handle\"", html);
+        Assert.Contains("hold card to reorder", html);
+        Assert.Contains("setTimeout(()=>", html);
+        Assert.Contains("onpointerdown=\"startReorder(event,'exercise')\"", html);
+        Assert.Contains("onpointerdown=\"startReorder(event,'set')\"", html);
+    }
 }

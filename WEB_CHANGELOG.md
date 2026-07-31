@@ -18,6 +18,7 @@
 - Exercise cards are read-only and show one of six color-coded target categories.
 - Adding or replacing a workout exercise uses a dedicated searchable, category-filtered picker and preserves existing sets when replacing.
 - Progress supports custom date ranges and clickable weekly volume bars that filter training history.
+- Mobile exercise and set ordering uses a long press on the whole card, without separate drag handles.
 
 ## Deferred iOS parity
 
