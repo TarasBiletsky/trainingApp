@@ -14,6 +14,7 @@
 - Mobile week and month calendars stack days vertically without horizontal clipping.
 - Home and workout lifecycle use the browser's local day instead of the server's UTC day.
 - The API rejects a second workout on the same local calendar day.
+- Exercise and set order can be changed by dragging their handles, with the order persisted by the API.
 - Exercise cards are read-only and show one of six color-coded target categories.
 - Adding or replacing a workout exercise uses a dedicated searchable, category-filtered picker and preserves existing sets when replacing.
 

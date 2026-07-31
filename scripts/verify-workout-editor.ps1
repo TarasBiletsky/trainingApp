@@ -9,6 +9,7 @@ $tokens = Invoke-RestMethod "$baseUrl/auth/login" -Method Post -ContentType 'app
 $headers = @{ Authorization = "Bearer $($tokens.accessToken)" }
 $workout = $null
 $futureWorkout = $null
+$testOffset = -660
 
 function Send([string] $Path, [string] $Method, $Body = $null) {
     $arguments = @{ Uri = "$baseUrl/$Path"; Method = $Method; Headers = $headers }
@@ -20,31 +21,40 @@ try {
     $bootstrap = Send 'bootstrap' 'GET'
     $choices = @($bootstrap.exercises | Select-Object -First 2)
     if ($choices.Count -lt 2) { throw 'Two exercises are required for the editor smoke test.' }
-    $workout = Send 'workouts/' 'POST' @{ name = 'Workout editor verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddHours(1).ToString('o'); notes = 'automatic smoke test' }
+    $workout = Send 'workouts/' 'POST' @{ name = 'Workout editor verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddHours(1).ToString('o'); notes = 'automatic smoke test'; utcOffsetMinutes = $testOffset }
     $duplicateRejected = $false
-    try { Send 'workouts/' 'POST' @{ name = 'Duplicate workout verification'; scheduledAt = $workout.scheduledAt; notes = 'must be rejected' } | Out-Null }
+    try { Send 'workouts/' 'POST' @{ name = 'Duplicate workout verification'; scheduledAt = $workout.scheduledAt; notes = 'must be rejected'; utcOffsetMinutes = $testOffset } | Out-Null }
     catch { if ($_.Exception.Response.StatusCode.value__ -eq 409) { $duplicateRejected = $true } else { throw } }
     if (!$duplicateRejected) { throw 'A second workout on the same day was accepted.' }
     $exercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
     $secondExercise = Send "workouts/$($workout.id)/exercises" 'POST' @{ exerciseId = $choices[1].id; order = 2; notes = ''; restSeconds = 90; weightMultiplier = 1 }
+    Send "workouts/$($workout.id)/exercises/order" 'PUT' @{ ids = @($secondExercise.id, $exercise.id) } | Out-Null
+    $reorderedExercises = Send "workouts/$($workout.id)" 'GET'
+    if ($reorderedExercises.exercises[0].id -ne $secondExercise.id) { throw 'Exercise order was not persisted.' }
+    Send "workouts/$($workout.id)/exercises/order" 'PUT' @{ ids = @($exercise.id, $secondExercise.id) } | Out-Null
     Send "workouts/$($workout.id)/exercises/$($secondExercise.id)" 'DELETE' | Out-Null
     1..2 | ForEach-Object { Send "workouts/$($workout.id)/exercises/$($exercise.id)/sets" 'POST' @{ order = $_; plannedWeightKg = 50; plannedReps = 8; isWarmup = $false } | Out-Null }
     $before = Send "workouts/$($workout.id)" 'GET'
     $setIds = @($before.exercises[0].sets.id)
+    Send "workouts/$($workout.id)/exercises/$($exercise.id)/sets/order" 'PUT' @{ ids = @($setIds[1], $setIds[0]) } | Out-Null
+    $reorderedSets = Send "workouts/$($workout.id)" 'GET'
+    if ($reorderedSets.exercises[0].sets[0].id -ne $setIds[1]) { throw 'Set order was not persisted.' }
+    Send "workouts/$($workout.id)/exercises/$($exercise.id)/sets/order" 'PUT' @{ ids = $setIds } | Out-Null
+    $before = Send "workouts/$($workout.id)" 'GET'
     Send "workouts/$($workout.id)/exercises/$($exercise.id)" 'PUT' @{ exerciseId = $choices[1].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 } | Out-Null
     $afterReplace = Send "workouts/$($workout.id)" 'GET'
     if ($afterReplace.exercises[0].exerciseId -ne $choices[1].id) { throw 'Exercise replacement was not persisted.' }
     if (Compare-Object $setIds @($afterReplace.exercises[0].sets.id)) { throw 'Exercise replacement changed the existing sets.' }
     $firstSet = $afterReplace.exercises[0].sets[0]
-    Send "workouts/$($workout.id)/sets/$($firstSet.id)/complete" 'POST' @{ order=$firstSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$firstSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    Send "workouts/$($workout.id)/sets/$($firstSet.id)/complete" 'POST' @{ order=$firstSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$firstSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o'); utcOffsetMinutes=$testOffset } | Out-Null
     $afterFirstSet = Send "workouts/$($workout.id)" 'GET'
     if ($afterFirstSet.status -ne 'InProgress') { throw 'Completing the first set did not start the workout.' }
     $secondSet = $afterFirstSet.exercises[0].sets[1]
-    Send "workouts/$($workout.id)/sets/$($secondSet.id)/complete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    Send "workouts/$($workout.id)/sets/$($secondSet.id)/complete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o'); utcOffsetMinutes=$testOffset } | Out-Null
     $afterLastSet = Send "workouts/$($workout.id)" 'GET'
     if ($afterLastSet.status -ne 'Completed') { throw 'Completing the last set did not finish the workout.' }
     $secondSet = $afterLastSet.exercises[0].sets[1]
-    Send "workouts/$($workout.id)/sets/$($secondSet.id)/uncomplete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version } | Out-Null
+    Send "workouts/$($workout.id)/sets/$($secondSet.id)/uncomplete" 'POST' @{ order=$secondSet.order; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$secondSet.version; utcOffsetMinutes=$testOffset } | Out-Null
     $afterUndo = Send "workouts/$($workout.id)" 'GET'
     if ($afterUndo.status -ne 'InProgress' -or $afterUndo.exercises[0].sets[1].status -ne 'Planned') { throw 'Undoing a set did not reopen the workout.' }
     Send "workouts/$($workout.id)/sets/$($setIds[-1])" 'DELETE' | Out-Null
@@ -55,13 +65,13 @@ try {
     if ($afterExerciseDelete.exercises.Count -ne 0) { throw 'Exercise was not deleted.' }
     Send "workouts/$($workout.id)" 'DELETE' | Out-Null
     $workout = $null
-    $futureWorkout = Send 'workouts/' 'POST' @{ name = 'Future workout verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddDays(2).ToString('o'); notes = 'automatic smoke test' }
+    $futureWorkout = Send 'workouts/' 'POST' @{ name = 'Future workout verification'; scheduledAt = [DateTimeOffset]::UtcNow.AddDays(2).ToString('o'); notes = 'automatic smoke test'; utcOffsetMinutes = $testOffset }
     $futureExercise = Send "workouts/$($futureWorkout.id)/exercises" 'POST' @{ exerciseId = $choices[0].id; order = 1; notes = ''; restSeconds = 90; weightMultiplier = 1 }
     $futureSet = Send "workouts/$($futureWorkout.id)/exercises/$($futureExercise.id)/sets" 'POST' @{ order = 1; plannedWeightKg = 50; plannedReps = 8; isWarmup = $false }
-    Send "workouts/$($futureWorkout.id)/sets/$($futureSet.id)/complete" 'POST' @{ order=1; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$futureSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o') } | Out-Null
+    Send "workouts/$($futureWorkout.id)/sets/$($futureSet.id)/complete" 'POST' @{ order=1; actualWeightKg=50; actualReps=8; isWarmup=$false; version=$futureSet.version; completedAt=[DateTimeOffset]::UtcNow.ToString('o'); utcOffsetMinutes=$testOffset } | Out-Null
     $futureResult = Send "workouts/$($futureWorkout.id)" 'GET'
     if ($futureResult.status -ne 'Planned' -or $futureResult.exercises[0].sets[0].status -ne 'Completed') { throw 'A non-today set changed the workout status.' }
-    Write-Output 'Workout editor verification passed: editing, today-only lifecycle, undo, and deletion succeeded.'
+    Write-Output 'Workout editor verification passed: ordering, editing, today-only lifecycle, undo, and deletion succeeded.'
 }
 finally {
     if ($null -ne $workout -or $null -ne $futureWorkout) {
