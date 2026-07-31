@@ -14,7 +14,10 @@
 - Mobile week and month calendars stack days vertically without horizontal clipping.
 - Home and workout lifecycle use the browser's local day instead of the server's UTC day.
 - The API rejects a second workout on the same local calendar day.
+- Exercise cards are read-only and show one of six color-coded target categories.
+- Adding or replacing a workout exercise uses a dedicated searchable, category-filtered picker and preserves existing sets when replacing.
 
 ## Deferred iOS parity
 
 - Port the final approved responsive web workflow to iOS in one pass.
+- Port exercise categories and the searchable add/replace picker to iOS.
