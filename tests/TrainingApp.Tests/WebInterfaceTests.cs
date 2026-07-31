@@ -40,6 +40,10 @@ public class WebInterfaceTests
         Assert.Contains("onpointerdown=\"startReorder(event,'set')\"", html);
         Assert.Contains("ontouchstart=\"startTouchReorder(event,'exercise')\"", html);
         Assert.Contains("function moveTouchReorder(event)", html);
+        Assert.Contains("classList.add('drag-ghost')", html);
+        Assert.Contains("reorderDrag.ghost.style.top", html);
+        Assert.Contains("function autoScrollReorder()", html);
+        Assert.Contains("scrollBy(0,reorderDrag.scrollSpeed)", html);
     }
 
     [Fact]
