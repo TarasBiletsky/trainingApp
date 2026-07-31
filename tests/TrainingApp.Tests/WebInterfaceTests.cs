@@ -38,5 +38,16 @@ public class WebInterfaceTests
         Assert.Contains("setTimeout(()=>", html);
         Assert.Contains("onpointerdown=\"startReorder(event,'exercise')\"", html);
         Assert.Contains("onpointerdown=\"startReorder(event,'set')\"", html);
+        Assert.Contains("ontouchstart=\"startTouchReorder(event,'exercise')\"", html);
+        Assert.Contains("function moveTouchReorder(event)", html);
+    }
+
+    [Fact]
+    public void WorkoutDisplaySortsExercisesAndSetsByPersistedOrder()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("w.exercises=(w.exercises||[]).sort((a,b)=>a.order-b.order)", html);
+        Assert.Contains("e.sets=(e.sets||[]).sort((a,b)=>a.order-b.order)", html);
     }
 }
