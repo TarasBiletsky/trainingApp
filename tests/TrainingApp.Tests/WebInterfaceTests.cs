@@ -54,4 +54,17 @@ public class WebInterfaceTests
         Assert.Contains("w.exercises=(w.exercises||[]).sort((a,b)=>a.order-b.order)", html);
         Assert.Contains("e.sets=(e.sets||[]).sort((a,b)=>a.order-b.order)", html);
     }
+
+    [Fact]
+    public void WorkoutPageHasDayNavigationActionsAndResponsiveMenu()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("function moveWorkoutDay(days)", html);
+        Assert.Contains("Skip workout", html);
+        Assert.Contains("Delete workout", html);
+        Assert.Contains("class=\"workout-menu\"", html);
+        Assert.Contains("id=\"menuToggle\"", html);
+        Assert.Contains("setMenu(innerWidth>600)", html);
+    }
 }

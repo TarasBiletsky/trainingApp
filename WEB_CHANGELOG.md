@@ -20,6 +20,8 @@
 - Progress supports custom date ranges and clickable weekly volume bars that filter training history.
 - Mobile exercise and set ordering uses long press on the whole card, keeps normal page scrolling, and shows a lifted card following the finger while dragging.
 - Active drag automatically scrolls the workout when the lifted card reaches the top or bottom edge of the screen.
+- Workout supports previous/next day browsing and a compact actions menu with skip and delete.
+- Navigation is a right-side collapsible menu, hidden by default on mobile and open by default on desktop.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 
 ## Deferred iOS parity

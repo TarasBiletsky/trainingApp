@@ -1,6 +1,6 @@
 namespace TrainingApp.Api.Domain;
 
-public enum WorkoutStatus { Planned, InProgress, Completed, Cancelled }
+public enum WorkoutStatus { Planned, InProgress, Completed, Skipped }
 public enum SetStatus { Planned, Completed, Skipped }
 
 public sealed class Exercise

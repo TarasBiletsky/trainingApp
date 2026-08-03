@@ -40,6 +40,7 @@ public sealed class SyncSetRulesTests
         var options = new JsonSerializerOptions(); options.Converters.Add(new JsonStringEnumConverter());
         Assert.Equal("\"Completed\"", JsonSerializer.Serialize(SetStatus.Completed, options));
         Assert.Equal("\"InProgress\"", JsonSerializer.Serialize(WorkoutStatus.InProgress, options));
+        Assert.Equal("\"Skipped\"", JsonSerializer.Serialize(WorkoutStatus.Skipped, options));
     }
 
     private static SetEntry Entry() => new() { Order = 1, Status = SetStatus.Completed, PlannedWeightKg = 60, PlannedReps = 8, ActualWeightKg = 60, ActualReps = 8, Notes = "offline" };
