@@ -22,6 +22,7 @@
 - Active drag automatically scrolls the workout when the lifted card reaches the top or bottom edge of the screen.
 - Workout supports previous/next day browsing and a compact actions menu with skip and delete.
 - Navigation is a right-side collapsible menu, hidden by default on mobile and open by default on desktop.
+- The navigation burger follows the conventional top-left placement.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 
 ## Deferred iOS parity
