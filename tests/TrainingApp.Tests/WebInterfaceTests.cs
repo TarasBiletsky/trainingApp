@@ -73,6 +73,10 @@ public class WebInterfaceTests
         Assert.Contains("class=\"mobile-header\"", html);
         Assert.Contains("class=\"drawer-head\"", html);
         Assert.Contains("width:min(320px,88vw)", html);
+        Assert.Contains("inset:0 auto 0 0", html);
+        Assert.Contains("transform:translateX(-100%)", html);
+        Assert.DoesNotContain("Training history · programming · access · data", html);
+        Assert.DoesNotContain("<h1>Logbook</h1>", html);
         Assert.Contains("body:has(#app.menu-open){overflow:hidden}", html);
     }
 
