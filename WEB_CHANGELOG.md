@@ -2,6 +2,13 @@
 
 ## Current
 
+- Responsive navigation now uses a fixed 56 px mobile header with a right-side drawer, a 232 px desktop sidebar, and a 72 px compact tablet rail.
+- Workout exercise actions are grouped under an overflow menu; mobile set rows use labelled SET, KG, REPS, and DONE columns without destructive buttons.
+- The rest timer is a reserved bottom bar with ready, active, add-time, skip, completion, and vibration states.
+- Mobile calendar controls use separate period navigation and view selection; month view is a true seven-column grid and week view is a seven-day strip.
+- Exercise library search runs automatically after 300 ms, includes equipment chips, and uses Load more on mobile.
+- Navigation labels are clarified as Training, Users, and Import & Export.
+
 - The Workout tab is the primary full workout editor.
 - Calendar workouts open in the same editor instead of a read-only dialog.
 - Exercises can be added, replaced, and deleted.
@@ -27,6 +34,7 @@
 
 ## Deferred iOS parity
 
+- Port the responsive navigation, workout action menus, set-row layout, rest bar, calendar controls, and library filters to iOS.
 - Port the final approved responsive web workflow to iOS in one pass.
 - Port exercise categories and the searchable add/replace picker to iOS.
 - Confirm deterministic exercise and set ordering in the iOS workout editor.

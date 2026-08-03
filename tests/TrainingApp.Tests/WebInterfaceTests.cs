@@ -29,12 +29,16 @@ public class WebInterfaceTests
     }
 
     [Fact]
-    public void WorkoutCardsUseLongPressReorderingWithoutHandleButtons()
+    public void WorkoutEditorUsesAccessibleMobileActionsAndSetColumns()
     {
         var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
 
         Assert.DoesNotContain("class=\"reorder-handle\"", html);
-        Assert.Contains("hold card to reorder", html);
+        Assert.Contains("class=\"exercise-menu\"", html);
+        Assert.Contains("Delete exercise", html);
+        Assert.Contains("class=\"set-labels\"", html);
+        Assert.Contains("<span>SET</span><span>KG</span><span>REPS</span><span>DONE</span>", html);
+        Assert.DoesNotContain("class=\"delete-set", html);
         Assert.Contains("setTimeout(()=>", html);
         Assert.Contains("onpointerdown=\"startReorder(event,'exercise')\"", html);
         Assert.Contains("onpointerdown=\"startReorder(event,'set')\"", html);
@@ -66,5 +70,34 @@ public class WebInterfaceTests
         Assert.Contains("class=\"workout-menu\"", html);
         Assert.Contains("id=\"menuToggle\"", html);
         Assert.Contains("setMenu(innerWidth>600)", html);
+        Assert.Contains("class=\"mobile-header\"", html);
+        Assert.Contains("class=\"drawer-head\"", html);
+        Assert.Contains("width:min(320px,88vw)", html);
+        Assert.Contains("body:has(#app.menu-open){overflow:hidden}", html);
+    }
+
+    [Fact]
+    public void RestTimerAndLibraryUseMobileFirstControls()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("class=\"rest-bar\"", html);
+        Assert.Contains("Start 90s", html);
+        Assert.Contains("function addTimer(n)", html);
+        Assert.Contains("navigator.vibrate", html);
+        Assert.Contains("oninput=\"scheduleLibrarySearch()\"", html);
+        Assert.Contains("setTimeout(()=>loadLibrary(0),300)", html);
+        Assert.Contains(">Load more</button>", html);
+    }
+
+    [Fact]
+    public void CalendarUsesSegmentedViewsAndRealMobileMonthGrid()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("class=\"calendar-tools views\"", html);
+        Assert.Contains(".calendar.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))", html);
+        Assert.Contains("aria-label=\"Previous period\"", html);
+        Assert.Contains("aria-label=\"Next period\"", html);
     }
 }
