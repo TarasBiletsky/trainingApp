@@ -70,6 +70,8 @@ public class WebInterfaceTests
         Assert.Contains("class=\"workout-menu\"", html);
         Assert.Contains("id=\"menuToggle\"", html);
         Assert.Contains("setMenu(innerWidth>600)", html);
+        Assert.Contains("classList.toggle('skipped-workout',skipped)", html);
+        Assert.Contains("x.disabled=!x.closest('.date-nav,.workout-menu')", html);
         Assert.Contains("class=\"mobile-header\"", html);
         Assert.Contains("class=\"drawer-head\"", html);
         Assert.Contains("width:min(320px,88vw)", html);

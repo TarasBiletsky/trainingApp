@@ -30,6 +30,7 @@
 - Workout supports previous/next day browsing and a compact actions menu with skip and delete.
 - Navigation is a right-side collapsible menu, hidden by default on mobile and open by default on desktop.
 - The navigation burger follows the conventional top-left placement.
+- Skipped workouts are visibly greyed out and read-only while day navigation and workout deletion remain available.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 
 ## Deferred iOS parity
