@@ -65,6 +65,7 @@ public class WebInterfaceTests
         var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
 
         Assert.Contains("function moveWorkoutDay(days)", html);
+        Assert.Contains("class=\"today-button secondary\" onclick=\"loadToday()\"", html);
         Assert.Contains("Skip workout", html);
         Assert.Contains("Delete workout", html);
         Assert.Contains("class=\"workout-menu\"", html);

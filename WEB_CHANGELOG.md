@@ -32,6 +32,7 @@
 - The navigation burger follows the conventional top-left placement.
 - Skipped workouts are visibly greyed out and read-only while day navigation and workout deletion remain available.
 - Mobile calendar workout dots are larger and use a visible muted-purple highlight with a soft halo.
+- Workout day navigation includes a compact Today shortcut whenever another date is open.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 
 ## Deferred iOS parity
