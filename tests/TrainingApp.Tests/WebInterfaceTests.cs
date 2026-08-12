@@ -48,7 +48,7 @@ public class WebInterfaceTests
         Assert.Contains("class=\"exercise-menu\"", html);
         Assert.Contains("Delete exercise", html);
         Assert.Contains("class=\"set-labels\"", html);
-        Assert.Contains("<span>SET</span><span>KG</span><span>REPS</span><span>DONE</span>", html);
+        Assert.Contains("<span>SET</span><span>KG</span><span class=\"planned-label\">PLAN</span><span>REPS</span><span>DONE</span>", html);
         Assert.DoesNotContain("class=\"delete-set", html);
         Assert.Contains("setTimeout(()=>", html);
         Assert.Contains("onpointerdown=\"startReorder(event,'exercise')\"", html);
@@ -117,5 +117,18 @@ public class WebInterfaceTests
         Assert.Contains(".calendar.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))", html);
         Assert.Contains("aria-label=\"Previous period\"", html);
         Assert.Contains("aria-label=\"Next period\"", html);
+    }
+
+    [Fact]
+    public void MobileSetsSupportPlanActualRepsAndSwipeDelete()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("font-size:16px", html);
+        Assert.Contains("Edit workout", html);
+        Assert.Contains("aria-label=\"Planned repetitions\"", html);
+        Assert.Contains("aria-label=\"Actual repetitions\"", html);
+        Assert.Contains("plannedReps:num(document.getElementById('p'+id)?.value)", html);
+        Assert.Contains("deleteBySwipe=event.type==='touchend'&&drag.swiping&&drag.swipeX>=80", html);
     }
 }
