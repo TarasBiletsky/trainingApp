@@ -47,6 +47,10 @@ public class WebInterfaceTests
         Assert.DoesNotContain("class=\"reorder-handle\"", html);
         Assert.Contains("class=\"exercise-menu\"", html);
         Assert.Contains("Delete exercise", html);
+        Assert.Contains("Skip exercise", html);
+        Assert.Contains("Unskip exercise", html);
+        Assert.Contains("classList.contains('skip-exercise')", html);
+        Assert.Contains("/exercises/${id}/${skipped?'unskip':'skip'}", html);
         Assert.Contains("class=\"set-labels\"", html);
         Assert.Contains("<span>SET</span><span>KG</span><span class=\"planned-label\">PLAN</span><span>REPS</span><span>DONE</span>", html);
         Assert.DoesNotContain("class=\"delete-set", html);
