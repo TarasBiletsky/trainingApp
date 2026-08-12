@@ -67,6 +67,8 @@ public class WebInterfaceTests
         Assert.Contains("scrollBy(0,reorderDrag.scrollSpeed)", html);
         Assert.Contains("desktop?null:setTimeout(()=>activateReorder(),350)", html);
         Assert.Contains("activateReorder(reorderDrag.pointerId)", html);
+        Assert.Contains("siblings.find(x=>{let rect=x.getBoundingClientRect();return y<rect.top+rect.height/2})", html);
+        Assert.DoesNotContain("document.elementFromPoint(x,y)", html);
     }
 
     [Fact]
