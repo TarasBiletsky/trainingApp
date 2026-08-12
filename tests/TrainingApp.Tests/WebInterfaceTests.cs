@@ -47,6 +47,8 @@ public class WebInterfaceTests
         Assert.DoesNotContain("class=\"reorder-handle\"", html);
         Assert.Contains("class=\"exercise-menu\"", html);
         Assert.Contains("Delete exercise", html);
+        Assert.DoesNotContain("Reorder sets", html);
+        Assert.DoesNotContain("toggleReorderMode", html);
         Assert.Contains("Skip exercise", html);
         Assert.Contains("Unskip exercise", html);
         Assert.Contains("classList.contains('skip-exercise')", html);

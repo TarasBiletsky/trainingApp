@@ -38,6 +38,7 @@
 - Planned repetitions remain visible during training and are read-only until workout edit mode is enabled; actual repetitions stay independently editable and preserved for history.
 - Exercises can be skipped or restored from their action menu; skipped exercises are greyed out and read-only while completed sets remain in history.
 - Desktop drag-and-drop now starts immediately after a short mouse movement instead of requiring a stationary long press.
+- Removed the redundant Reorder sets menu action; set cards are always directly draggable.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 - Exercise replacement now opens with Potential replacements and All exercises tabs backed by explicit exercise relationships.
 - Cable pullovers, lat pulldown grips, cable curl attachments, and triceps cable attachments are distinct exercise-library entries.
