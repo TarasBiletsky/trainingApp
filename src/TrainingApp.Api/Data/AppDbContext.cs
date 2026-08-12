@@ -5,7 +5,7 @@ namespace TrainingApp.Api.Data;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Exercise> Exercises => Set<Exercise>(); public DbSet<Workout> Workouts => Set<Workout>(); public DbSet<WorkoutExercise> WorkoutExercises => Set<WorkoutExercise>();
+    public DbSet<Exercise> Exercises => Set<Exercise>(); public DbSet<ExerciseReplacement> ExerciseReplacements => Set<ExerciseReplacement>(); public DbSet<Workout> Workouts => Set<Workout>(); public DbSet<WorkoutExercise> WorkoutExercises => Set<WorkoutExercise>();
     public DbSet<SetEntry> SetEntries => Set<SetEntry>(); public DbSet<WorkoutTemplate> WorkoutTemplates => Set<WorkoutTemplate>(); public DbSet<TemplateExercise> TemplateExercises => Set<TemplateExercise>();
     public DbSet<TemplateSet> TemplateSets => Set<TemplateSet>(); public DbSet<HealthSample> HealthSamples => Set<HealthSample>(); public DbSet<BodyMeasurement> BodyMeasurements => Set<BodyMeasurement>();
     public DbSet<LocalUser> Users => Set<LocalUser>(); public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
@@ -14,6 +14,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     {
         b.HasDefaultSchema("training");
         b.Entity<Exercise>().HasIndex(x => new { x.OwnerId, x.Name }).IsUnique();
+        b.Entity<ExerciseReplacement>().HasKey(x => new { x.ExerciseId, x.ReplacementExerciseId });
+        b.Entity<ExerciseReplacement>().HasOne(x => x.Exercise).WithMany().HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
+        b.Entity<ExerciseReplacement>().HasOne(x => x.ReplacementExercise).WithMany().HasForeignKey(x => x.ReplacementExerciseId).OnDelete(DeleteBehavior.Cascade);
+        b.Entity<ExerciseReplacement>().ToTable(t => t.HasCheckConstraint("CK_ExerciseReplacements_DifferentExercises", "\"ExerciseId\" <> \"ReplacementExerciseId\""));
         b.Entity<Workout>().Property(x => x.Version).IsConcurrencyToken(); b.Entity<SetEntry>().Property(x => x.Version).IsConcurrencyToken();
         b.Entity<WorkoutExercise>().Property(x => x.WeightMultiplier).HasDefaultValue(1); b.Entity<WorkoutExercise>().ToTable(t => t.HasCheckConstraint("CK_WorkoutExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)"));
         b.Entity<TemplateExercise>().Property(x => x.WeightMultiplier).HasDefaultValue(1); b.Entity<TemplateExercise>().ToTable(t => t.HasCheckConstraint("CK_TemplateExercises_WeightMultiplier", "\"WeightMultiplier\" IN (1, 2)"));

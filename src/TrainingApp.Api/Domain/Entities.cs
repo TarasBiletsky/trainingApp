@@ -21,6 +21,14 @@ public sealed class Exercise
     public Guid? OwnerId { get; set; }
 }
 
+public sealed class ExerciseReplacement
+{
+    public Guid ExerciseId { get; set; }
+    public Exercise? Exercise { get; set; }
+    public Guid ReplacementExerciseId { get; set; }
+    public Exercise? ReplacementExercise { get; set; }
+}
+
 public sealed class Workout
 {
     public Guid Id { get; set; } = Guid.NewGuid();

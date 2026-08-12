@@ -34,6 +34,9 @@
 - Mobile calendar workout dots are larger and use a visible muted-purple highlight with a soft halo.
 - Workout day navigation includes a compact Today shortcut whenever another date is open.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
+- Exercise replacement now opens with Potential replacements and All exercises tabs backed by explicit exercise relationships.
+- Cable pullovers, lat pulldown grips, cable curl attachments, and triceps cable attachments are distinct exercise-library entries.
+- Potential replacements now cover chest presses and flyes, horizontal and vertical pulls, shoulder presses and raises, squat and hinge patterns, leg curls, hip extensions, and arm work.
 
 ## Deferred iOS parity
 
@@ -41,3 +44,4 @@
 - Port the final approved responsive web workflow to iOS in one pass.
 - Port exercise categories and the searchable add/replace picker to iOS.
 - Confirm deterministic exercise and set ordering in the iOS workout editor.
+- Port exercise replacement recommendations and attachment-specific exercise variants to iOS.

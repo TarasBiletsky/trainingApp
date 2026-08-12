@@ -302,57 +302,6 @@ BEGIN
     END IF;
 END $EF$;
 COMMIT;
-
-START TRANSACTION;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260731090000_RepairEarlyWorkoutCompletion') THEN
-    UPDATE training."Workouts"
-    SET "Status" = 0, "StartedAt" = NULL, "CompletedAt" = NULL, "Version" = "Version" + 1, "UpdatedAt" = NOW()
-    WHERE "Status" = 2 AND "CompletedAt"::date < "ScheduledAt"::date;
-    END IF;
-END $EF$;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260731090000_RepairEarlyWorkoutCompletion') THEN
-    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-    VALUES ('20260731090000_RepairEarlyWorkoutCompletion', '10.0.4');
-    END IF;
-END $EF$;
-COMMIT;
-
-START TRANSACTION;
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
-        ALTER TABLE training."TemplateSets" DROP COLUMN "Rpe";
-        ALTER TABLE training."SetEntries" DROP COLUMN "ActualRpe";
-        ALTER TABLE training."SetEntries" DROP COLUMN "PlannedRpe";
-        INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20260730190000_RemoveRpe', '10.0.4');
-    END IF;
-END $EF$;
-COMMIT;
-
-START TRANSACTION;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
-    ALTER TABLE training."Users" ADD "ColorTheme" text NOT NULL DEFAULT 'purple';
-    ALTER TABLE training."Users" ADD CONSTRAINT "CK_Users_ColorTheme" CHECK ("ColorTheme" IN ('purple', 'toxic', 'red'));
-    END IF;
-END $EF$;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
-    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('20260730180000_AddUserColorTheme', '10.0.4');
-    END IF;
-END $EF$;
-COMMIT;
-
 START TRANSACTION;
 
 DO $EF$
@@ -648,8 +597,26 @@ DO $EF$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
     ALTER TABLE training."WorkoutExercises" ADD "WeightMultiplier" integer NOT NULL DEFAULT 1;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
     ALTER TABLE training."TemplateExercises" ADD "WeightMultiplier" integer NOT NULL DEFAULT 1;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
     ALTER TABLE training."WorkoutExercises" ADD CONSTRAINT "CK_WorkoutExercises_WeightMultiplier" CHECK ("WeightMultiplier" IN (1, 2));
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
     ALTER TABLE training."TemplateExercises" ADD CONSTRAINT "CK_TemplateExercises_WeightMultiplier" CHECK ("WeightMultiplier" IN (1, 2));
     END IF;
 END $EF$;
@@ -659,6 +626,348 @@ BEGIN
     IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730140000_AddExerciseWeightMultiplier') THEN
     INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
     VALUES ('20260730140000_AddExerciseWeightMultiplier', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
+    ALTER TABLE training."Users" ADD "ColorTheme" text NOT NULL DEFAULT 'purple';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
+    ALTER TABLE training."Users" ADD CONSTRAINT "CK_Users_ColorTheme" CHECK ("ColorTheme" IN ('purple', 'toxic', 'red'));
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730180000_AddUserColorTheme') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260730180000_AddUserColorTheme', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
+    ALTER TABLE training."TemplateSets" DROP COLUMN "Rpe";
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
+    ALTER TABLE training."SetEntries" DROP COLUMN "ActualRpe";
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
+    ALTER TABLE training."SetEntries" DROP COLUMN "PlannedRpe";
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260730190000_RemoveRpe') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260730190000_RemoveRpe', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260806075815_AddExerciseReplacements') THEN
+    CREATE TABLE training."ExerciseReplacements" (
+        "ExerciseId" uuid NOT NULL,
+        "ReplacementExerciseId" uuid NOT NULL,
+        CONSTRAINT "PK_ExerciseReplacements" PRIMARY KEY ("ExerciseId", "ReplacementExerciseId"),
+        CONSTRAINT "CK_ExerciseReplacements_DifferentExercises" CHECK ("ExerciseId" <> "ReplacementExerciseId"),
+        CONSTRAINT "FK_ExerciseReplacements_Exercises_ExerciseId" FOREIGN KEY ("ExerciseId") REFERENCES training."Exercises" ("Id") ON DELETE CASCADE,
+        CONSTRAINT "FK_ExerciseReplacements_Exercises_ReplacementExerciseId" FOREIGN KEY ("ReplacementExerciseId") REFERENCES training."Exercises" ("Id") ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260806075815_AddExerciseReplacements') THEN
+    CREATE INDEX "IX_ExerciseReplacements_ReplacementExerciseId" ON training."ExerciseReplacements" ("ReplacementExerciseId");
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260806075815_AddExerciseReplacements') THEN
+    INSERT INTO training."Exercises"
+        ("Id", "Name", "Description", "MuscleGroup", "Equipment", "IsArchived", "CreatedAt", "UpdatedAt", "OwnerId")
+    VALUES
+        ('50000000-0000-0000-0000-000000000001', 'Lat Pulldown - Wide Overhand Grip', 'Lat pulldown using a wide overhand lat bar.', 'Back', 'Cable (wide lat bar)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000002', 'Lat Pulldown - Medium Neutral Grip', 'Lat pulldown using a shoulder-width neutral-grip attachment.', 'Back', 'Cable (medium neutral-grip attachment)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000003', 'Lat Pulldown - Close Neutral Grip', 'Lat pulldown using a close neutral-grip attachment.', 'Back', 'Cable (close neutral-grip attachment)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000004', 'Lat Pulldown - Underhand Grip', 'Lat pulldown using an underhand grip on a straight bar.', 'Back', 'Cable (straight bar)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000005', 'Cable Pullover - Straight Bar', 'Standing cable pullover using a straight bar.', 'Back', 'Cable (straight bar)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000006', 'Cable Pullover - Rope', 'Standing cable pullover using a rope attachment.', 'Back', 'Cable (rope)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000007', 'Machine Pullover', 'Pullover performed on a dedicated plate-loaded or selectorized machine.', 'Back', 'Pullover machine', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000008', 'Cable Curl - Straight Bar', 'Standing cable curl using a straight bar.', 'Biceps', 'Cable (straight bar)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000009', 'Cable Curl - EZ-Bar', 'Standing cable curl using an angled EZ-bar attachment.', 'Biceps', 'Cable (EZ-bar attachment)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000010', 'Cable Hammer Curl - Rope', 'Standing cable hammer curl using a rope attachment and neutral grip.', 'Biceps', 'Cable (rope)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000011', 'Cable Triceps Pushdown - Straight Bar', 'Cable triceps pushdown using a straight bar.', 'Triceps', 'Cable (straight bar)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000012', 'Cable Triceps Pushdown - V-Bar', 'Cable triceps pushdown using a V-bar attachment.', 'Triceps', 'Cable (V-bar attachment)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000013', 'Cable Triceps Pushdown - Rope', 'Cable triceps pushdown using a rope attachment.', 'Triceps', 'Cable (rope)', FALSE, NOW(), NOW(), NULL),
+        ('50000000-0000-0000-0000-000000000014', 'Cable Overhead Triceps Extension - Rope', 'Overhead cable triceps extension using a rope attachment.', 'Triceps', 'Cable (rope)', FALSE, NOW(), NOW(), NULL)
+    ON CONFLICT ("Id") DO NOTHING;
+
+    WITH variants ("GroupName", "Id") AS (
+        VALUES
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000001'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000002'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000003'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000004'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000005'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000006'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000007'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000008'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000009'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000010'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000011'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000012'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000013'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000014'::uuid)
+    )
+    INSERT INTO training."ExerciseReplacements" ("ExerciseId", "ReplacementExerciseId")
+    SELECT source."Id", replacement."Id"
+    FROM variants source
+    JOIN variants replacement ON replacement."GroupName" = source."GroupName" AND replacement."Id" <> source."Id"
+    ON CONFLICT DO NOTHING;
+
+    WITH variants ("GroupName", "Id") AS (
+        VALUES
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000001'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000002'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000003'::uuid),
+            ('lat-pulldown', '50000000-0000-0000-0000-000000000004'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000005'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000006'::uuid),
+            ('pullover', '50000000-0000-0000-0000-000000000007'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000008'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000009'::uuid),
+            ('cable-curl', '50000000-0000-0000-0000-000000000010'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000011'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000012'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000013'::uuid),
+            ('triceps-cable', '50000000-0000-0000-0000-000000000014'::uuid)
+    ),
+    aliases AS (
+        SELECT "Id",
+            CASE
+                WHEN "Name" IN ('Lat Pulldown', 'Lat Pulldown Machine') THEN 'lat-pulldown'
+                WHEN "Name" IN ('Pullover', 'Cable Pullover') THEN 'pullover'
+                WHEN "Name" IN ('Cable Curl', 'EZ-Bar Curl', 'Dumbbell Curl', 'Hammer Curl') THEN 'cable-curl'
+                WHEN "Name" IN ('Cable Pulldown', 'Rope Push Down', 'Cable Overhead Triceps Extension') THEN 'triceps-cable'
+            END AS "GroupName"
+        FROM training."Exercises"
+        WHERE "Name" IN ('Lat Pulldown', 'Lat Pulldown Machine', 'Pullover', 'Cable Pullover', 'Cable Curl',
+            'EZ-Bar Curl', 'Dumbbell Curl', 'Hammer Curl',
+            'Cable Pulldown', 'Rope Push Down', 'Cable Overhead Triceps Extension')
+    ),
+    links AS (
+        SELECT aliases."Id" AS "ExerciseId", variants."Id" AS "ReplacementExerciseId"
+        FROM aliases JOIN variants USING ("GroupName")
+        UNION
+        SELECT variants."Id", aliases."Id"
+        FROM aliases JOIN variants USING ("GroupName")
+    )
+    INSERT INTO training."ExerciseReplacements" ("ExerciseId", "ReplacementExerciseId")
+    SELECT "ExerciseId", "ReplacementExerciseId" FROM links
+    WHERE "ExerciseId" <> "ReplacementExerciseId"
+    ON CONFLICT DO NOTHING;
+
+    UPDATE training."TemplateExercises" SET "ExerciseId" = '50000000-0000-0000-0000-000000000001'
+    WHERE "ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Lat Pulldown');
+    UPDATE training."WorkoutExercises" we SET "ExerciseId" = '50000000-0000-0000-0000-000000000001'
+    FROM training."Workouts" w
+    WHERE we."WorkoutId" = w."Id" AND w."Status" = 0
+        AND we."ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Lat Pulldown');
+
+    UPDATE training."TemplateExercises" SET "ExerciseId" = '50000000-0000-0000-0000-000000000005'
+    WHERE "ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Pullover');
+    UPDATE training."WorkoutExercises" we SET "ExerciseId" = '50000000-0000-0000-0000-000000000005'
+    FROM training."Workouts" w
+    WHERE we."WorkoutId" = w."Id" AND w."Status" = 0
+        AND we."ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Pullover');
+    UPDATE training."TemplateSets" ts SET "WeightKg" = NULL
+    FROM training."TemplateExercises" te
+    WHERE ts."TemplateExerciseId" = te."Id" AND te."ExerciseId" = '50000000-0000-0000-0000-000000000005';
+    UPDATE training."SetEntries" s SET "PlannedWeightKg" = NULL
+    FROM training."WorkoutExercises" we, training."Workouts" w
+    WHERE s."WorkoutExerciseId" = we."Id" AND we."WorkoutId" = w."Id" AND w."Status" = 0
+        AND we."ExerciseId" = '50000000-0000-0000-0000-000000000005';
+
+    UPDATE training."TemplateExercises" SET "ExerciseId" = '50000000-0000-0000-0000-000000000013'
+    WHERE "ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Rope Push Down');
+    UPDATE training."WorkoutExercises" we SET "ExerciseId" = '50000000-0000-0000-0000-000000000013'
+    FROM training."Workouts" w
+    WHERE we."WorkoutId" = w."Id" AND w."Status" = 0
+        AND we."ExerciseId" IN (SELECT "Id" FROM training."Exercises" WHERE "Name" = 'Rope Push Down');
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260806075815_AddExerciseReplacements') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260806075815_AddExerciseReplacements', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260812102519_ExpandExerciseReplacements') THEN
+    INSERT INTO training."Exercises"
+        ("Id", "Name", "Description", "MuscleGroup", "Equipment", "IsArchived", "CreatedAt", "UpdatedAt", "OwnerId")
+    VALUES
+        ('60000000-0000-0000-0000-000000000001', 'Barbell Bench Press - Paused', 'Flat barbell bench press with a controlled pause on the chest.', 'Chest', 'Barbell and flat bench', FALSE, NOW(), NOW(), NULL),
+        ('60000000-0000-0000-0000-000000000002', 'Barbell Bench Press - Close Grip', 'Flat barbell bench press using a close grip.', 'Chest', 'Barbell and flat bench', FALSE, NOW(), NOW(), NULL),
+        ('60000000-0000-0000-0000-000000000003', 'Smith Machine Incline Press', 'Incline bench press performed in a Smith machine.', 'Chest', 'Smith machine and incline bench', FALSE, NOW(), NOW(), NULL),
+        ('60000000-0000-0000-0000-000000000004', 'Machine Shoulder Press', 'Seated overhead press on a selectorized or plate-loaded machine.', 'Shoulders', 'Shoulder press machine', FALSE, NOW(), NOW(), NULL),
+        ('60000000-0000-0000-0000-000000000005', 'Single-Arm Cable Row', 'Horizontal cable row performed one arm at a time.', 'Back', 'Cable (single handle)', FALSE, NOW(), NOW(), NULL),
+        ('60000000-0000-0000-0000-000000000006', 'Chest-Supported T-Bar Row', 'T-bar row performed with the chest supported on a pad.', 'Back', 'Chest-supported T-bar machine', FALSE, NOW(), NOW(), NULL)
+    ON CONFLICT ("Id") DO NOTHING;
+
+    WITH groups ("GroupName", "ExerciseName") AS (
+        VALUES
+            ('chest-press', 'Bench Press'),
+            ('chest-press', 'Barbell Bench Press - Paused'),
+            ('chest-press', 'Barbell Bench Press - Close Grip'),
+            ('chest-press', 'Flat Dumbbell Bench Press'),
+            ('chest-press', 'Smith Machine Flat Barbell Press'),
+            ('chest-press', 'Chest Press Machine'),
+            ('chest-press', 'Wide Chest Press Machine'),
+            ('chest-press', 'Incline Barbell Bench Press'),
+            ('chest-press', 'Incline Dumbbell Bench Press'),
+            ('chest-press', 'Incline Chest Press'),
+            ('chest-press', 'Incline Chest Press Machine'),
+            ('chest-press', 'Smith Machine Incline Press'),
+            ('chest-press', 'Dips'),
+            ('chest-fly', 'Cable Crossover'),
+            ('chest-fly', 'Flat Dumbbell Fly'),
+            ('chest-fly', 'Incline Dumbbell Fly'),
+            ('chest-fly', 'Pec Deck Chest'),
+            ('chest-fly', 'Seated Machine Fly'),
+            ('horizontal-row', 'Barbell Row'),
+            ('horizontal-row', 'Chest Supported Row'),
+            ('horizontal-row', 'Chest-Supported T-Bar Row'),
+            ('horizontal-row', 'Dumbbell Row'),
+            ('horizontal-row', 'Single-Arm Cable Row'),
+            ('horizontal-row', 'Low Row Machine'),
+            ('horizontal-row', 'Row Machine'),
+            ('horizontal-row', 'Seated Cable Row'),
+            ('horizontal-row', 'Smith Machine Row'),
+            ('horizontal-row', 'T-Bar Row'),
+            ('horizontal-row', 'Upper Back Machine'),
+            ('vertical-pull', 'Lat Pulldown'),
+            ('vertical-pull', 'Lat Pulldown - Wide Overhand Grip'),
+            ('vertical-pull', 'Lat Pulldown - Medium Neutral Grip'),
+            ('vertical-pull', 'Lat Pulldown - Close Neutral Grip'),
+            ('vertical-pull', 'Lat Pulldown - Underhand Grip'),
+            ('vertical-pull', 'Lat Pulldown Machine'),
+            ('vertical-pull', 'Pull Down'),
+            ('vertical-pull', 'Pull Down Machine'),
+            ('vertical-pull', 'Pull Up'),
+            ('vertical-pull', 'Revers Grip Pull Up'),
+            ('shoulder-press', 'Overhead Press'),
+            ('shoulder-press', 'Push Press'),
+            ('shoulder-press', 'Seated Barbell Press'),
+            ('shoulder-press', 'Seated Dumbbell Press'),
+            ('shoulder-press', 'Shoulder Press'),
+            ('shoulder-press', 'Smith Machine Seated Press'),
+            ('shoulder-press', 'Machine Shoulder Press'),
+            ('lateral-raise', 'Barbell Lateral Raise'),
+            ('lateral-raise', 'Cable Lateral Raise'),
+            ('lateral-raise', 'Delt Machine'),
+            ('lateral-raise', 'Lateral Dumbbell Raise'),
+            ('rear-delt', 'Bent Over Lateral Raise'),
+            ('rear-delt', 'Cable Face Pull'),
+            ('rear-delt', 'Pec Deck'),
+            ('rear-delt', 'Rear Delt Cable Fly'),
+            ('rear-delt', 'Rear Delt Machine Fly'),
+            ('rear-delt', 'Reverse Pec Deck'),
+            ('squat-pattern', 'Squat'),
+            ('squat-pattern', 'Barbell Full Squat'),
+            ('squat-pattern', 'Belt Squat'),
+            ('squat-pattern', 'Hack Squat'),
+            ('squat-pattern', 'Leg Press'),
+            ('squat-pattern', 'Smith Machine Squat'),
+            ('squat-pattern', 'Zercher Squat'),
+            ('hip-hinge', 'Romanian Deadlift'),
+            ('hip-hinge', 'Deadlift'),
+            ('hip-hinge', 'Hyperextension'),
+            ('hip-hinge', 'Roman Chair Back Extension'),
+            ('hamstring-curl', 'Lying Leg Curl'),
+            ('hamstring-curl', 'Seated Leg Curl'),
+            ('hip-extension', 'Barbell Glute Bridge'),
+            ('hip-extension', 'Hip Thrust'),
+            ('hip-extension', 'Rear Kick'),
+            ('biceps-curl', 'Barbell Curl'),
+            ('biceps-curl', 'Cable Curl'),
+            ('biceps-curl', 'Cable Curl - EZ-Bar'),
+            ('biceps-curl', 'Cable Curl - Straight Bar'),
+            ('biceps-curl', 'Cable Hammer Curl - Rope'),
+            ('biceps-curl', 'Dumbbell Concentration Curl'),
+            ('biceps-curl', 'Dumbbell Curl'),
+            ('biceps-curl', 'Dumbbell Hammer Curl'),
+            ('biceps-curl', 'EZ-Bar Curl'),
+            ('biceps-curl', 'EZ-Bar Preacher Curl'),
+            ('triceps-extension', 'Barbell Skullcrusher'),
+            ('triceps-extension', 'Cable Overhead Triceps Extension'),
+            ('triceps-extension', 'Cable Overhead Triceps Extension - Rope'),
+            ('triceps-extension', 'Cable Pulldown'),
+            ('triceps-extension', 'Cable Triceps Pushdown - Rope'),
+            ('triceps-extension', 'Cable Triceps Pushdown - Straight Bar'),
+            ('triceps-extension', 'Cable Triceps Pushdown - V-Bar'),
+            ('triceps-extension', 'Dumbbell Overhead Triceps Extension'),
+            ('triceps-extension', 'EZ-Bar Skullcrusher'),
+            ('triceps-extension', 'Rope Push Down'),
+            ('triceps-extension', 'Seated Dip'),
+            ('triceps-extension', 'Smith Machine Close Grip Bench Press')
+    ),
+    members AS (
+        SELECT groups."GroupName", exercises."Id"
+        FROM groups
+        JOIN training."Exercises" exercises ON exercises."Name" = groups."ExerciseName"
+        WHERE NOT exercises."IsArchived"
+    )
+    INSERT INTO training."ExerciseReplacements" ("ExerciseId", "ReplacementExerciseId")
+    SELECT source."Id", replacement."Id"
+    FROM members source
+    JOIN members replacement ON replacement."GroupName" = source."GroupName" AND replacement."Id" <> source."Id"
+    ON CONFLICT DO NOTHING;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260812102519_ExpandExerciseReplacements') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260812102519_ExpandExerciseReplacements', '10.0.4');
     END IF;
 END $EF$;
 COMMIT;

@@ -17,6 +17,17 @@ public class WebInterfaceTests
     }
 
     [Fact]
+    public void ExerciseReplacementPickerPrioritizesSuggestedAlternatives()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains(">Potential replacements</button>", html);
+        Assert.Contains(">All exercises</button>", html);
+        Assert.Contains("/replacements`)", html);
+        Assert.Contains("exercisePickerTab==='potential'?exerciseReplacementCache:exerciseCache", html);
+    }
+
+    [Fact]
     public void ProgressSupportsDateRangesAndClickableWeeks()
     {
         var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
