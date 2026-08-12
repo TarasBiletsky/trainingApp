@@ -63,6 +63,8 @@ public class WebInterfaceTests
         Assert.Contains("reorderDrag.ghost.style.top", html);
         Assert.Contains("function autoScrollReorder()", html);
         Assert.Contains("scrollBy(0,reorderDrag.scrollSpeed)", html);
+        Assert.Contains("desktop?null:setTimeout(()=>activateReorder(),350)", html);
+        Assert.Contains("activateReorder(reorderDrag.pointerId)", html);
     }
 
     [Fact]
