@@ -128,6 +128,8 @@ public class WebInterfaceTests
         Assert.Contains("Edit workout", html);
         Assert.Contains("aria-label=\"Planned repetitions\"", html);
         Assert.Contains("aria-label=\"Actual repetitions\"", html);
+        Assert.Contains("${workoutEditMode?'':'disabled'}", html);
+        Assert.DoesNotContain(".planned-reps,.set-labels .planned-label{display:none}", html);
         Assert.Contains("plannedReps:num(document.getElementById('p'+id)?.value)", html);
         Assert.Contains("deleteBySwipe=event.type==='touchend'&&drag.swiping&&drag.swipeX>=80", html);
     }

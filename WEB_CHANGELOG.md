@@ -35,7 +35,7 @@
 - Workout day navigation includes a compact Today shortcut whenever another date is open.
 - Mobile numeric fields use a 16px font to prevent browser focus zoom.
 - Sets can be deleted with a deliberate left-to-right swipe and confirmation.
-- Workout edit mode exposes planned repetitions while actual repetitions remain independently editable and preserved for history.
+- Planned repetitions remain visible during training and are read-only until workout edit mode is enabled; actual repetitions stay independently editable and preserved for history.
 - Workout exercises and sets always render by their persisted order, independent of database response order.
 - Exercise replacement now opens with Potential replacements and All exercises tabs backed by explicit exercise relationships.
 - Cable pullovers, lat pulldown grips, cable curl attachments, and triceps cable attachments are distinct exercise-library entries.
