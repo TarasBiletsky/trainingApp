@@ -26,6 +26,7 @@ public sealed class SyncSetRulesTests
         Assert.Equal(Now, entry.CompletedAt);
     }
     [Fact] public void DifferentRetry_IsNotEquivalent() { var entry = Entry(); Assert.False(SyncSetRules.SameSet(entry, Write(actualReps: 9))); }
+    [Fact] public void DifferentEffort_IsNotEquivalent() { var entry = Entry(); entry.Effort = SetEffort.OneToTwoRepsInReserve; Assert.False(SyncSetRules.SameSet(entry, Write())); Assert.True(SyncSetRules.SameSet(entry, Write() with { Effort = SetEffort.OneToTwoRepsInReserve })); }
     [Fact] public void ExplicitDifferentCompletionTime_IsNotEquivalent() { var entry = Entry(); entry.CompletedAt = Now; Assert.False(SyncSetRules.SameSet(entry, Write(completedAt: Now.AddMinutes(-1)))); }
     [Fact] public void WeightMultiplier_DefaultsToOne() { Assert.Equal(1, new WorkoutExercise().WeightMultiplier); Assert.Equal(1, new TemplateExercise().WeightMultiplier); }
     [Fact] public void WeightMultiplier_HasDatabaseChecks()

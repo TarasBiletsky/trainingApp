@@ -971,3 +971,21 @@ BEGIN
     END IF;
 END $EF$;
 COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260814084640_AddSetEffort') THEN
+    ALTER TABLE training."SetEntries" ADD "Effort" integer;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260814084640_AddSetEffort') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260814084640_AddSetEffort', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;

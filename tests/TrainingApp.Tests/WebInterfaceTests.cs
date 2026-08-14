@@ -142,5 +142,8 @@ public class WebInterfaceTests
         Assert.DoesNotContain(".planned-reps,.set-labels .planned-label{display:none}", html);
         Assert.Contains("plannedReps:num(document.getElementById('p'+id)?.value)", html);
         Assert.Contains("deleteBySwipe=event.type==='touchend'&&drag.swiping&&drag.swipeX>=80", html);
+        Assert.Contains("aria-label=\"Set effort\"", html);
+        Assert.Contains(">1–2 reps left</option>", html);
+        Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
     }
 }

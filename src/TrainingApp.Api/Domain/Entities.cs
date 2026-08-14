@@ -2,6 +2,7 @@ namespace TrainingApp.Api.Domain;
 
 public enum WorkoutStatus { Planned, InProgress, Completed, Skipped }
 public enum SetStatus { Planned, Completed, Skipped }
+public enum SetEffort { Failure, OneToTwoRepsInReserve, ThreeToFourRepsInReserve }
 
 public sealed class Exercise
 {
@@ -70,6 +71,7 @@ public sealed class SetEntry
     public int? PlannedReps { get; set; }
     public decimal? ActualWeightKg { get; set; }
     public int? ActualReps { get; set; }
+    public SetEffort? Effort { get; set; }
     public bool IsWarmup { get; set; }
     public DateTimeOffset? CompletedAt { get; set; }
     public string? Notes { get; set; }
