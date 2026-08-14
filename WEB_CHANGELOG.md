@@ -45,6 +45,7 @@
 - Cable pullovers, lat pulldown grips, cable curl attachments, and triceps cable attachments are distinct exercise-library entries.
 - Potential replacements now cover chest presses and flyes, horizontal and vertical pulls, shoulder presses and raises, squat and hinge patterns, leg curls, hip extensions, and arm work.
 - Workout sets can optionally record failure, 1–2 reps in reserve, or 3–4 reps in reserve.
+- Skipped workouts can optionally record and display a reason.
 
 ## Deferred iOS parity
 
@@ -54,3 +55,4 @@
 - Confirm deterministic exercise and set ordering in the iOS workout editor.
 - Port exercise replacement recommendations and attachment-specific exercise variants to iOS.
 - Add the optional set-effort selector to iOS workout logging.
+- Add the optional workout skip-reason prompt to iOS.

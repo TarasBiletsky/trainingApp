@@ -989,3 +989,21 @@ BEGIN
     END IF;
 END $EF$;
 COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260814141312_AddWorkoutSkipReason') THEN
+    ALTER TABLE training."Workouts" ADD "SkipReason" character varying(500);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260814141312_AddWorkoutSkipReason') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260814141312_AddWorkoutSkipReason', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;

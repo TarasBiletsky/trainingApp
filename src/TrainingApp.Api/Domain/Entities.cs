@@ -39,6 +39,7 @@ public sealed class Workout
     public DateTimeOffset? CompletedAt { get; set; }
     public WorkoutStatus Status { get; set; } = WorkoutStatus.Planned;
     public string? Notes { get; set; }
+    public string? SkipReason { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public long Version { get; set; } = 1;

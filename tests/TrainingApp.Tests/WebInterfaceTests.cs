@@ -150,4 +150,14 @@ public class WebInterfaceTests
         Assert.Contains("document.querySelectorAll('.effort-picker[open]')", html);
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
     }
+
+    [Fact]
+    public void SkippingWorkoutSupportsAnOptionalReason()
+    {
+        var html = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../src/TrainingApp.Api/wwwroot/index.html")));
+
+        Assert.Contains("id=\"skipWorkoutReason\" maxlength=\"500\"", html);
+        Assert.Contains("skip?reason=${encodeURIComponent(reason)}", html);
+        Assert.Contains("<strong>Skip reason:</strong>", html);
+    }
 }
