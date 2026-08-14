@@ -146,6 +146,8 @@ public class WebInterfaceTests
         Assert.Contains("<i class=\"failure\"></i>Failure", html);
         Assert.Contains("<i class=\"near\"></i>1–2 reps left", html);
         Assert.Contains("<i class=\"reserve\"></i>3–4 reps left", html);
+        Assert.Contains(".effort-menu button{display:block;width:100%;padding:9px;text-align:left;background:transparent;border:0;color:#f4f6f5}", html);
+        Assert.Contains("document.querySelectorAll('.effort-picker[open]')", html);
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
     }
 }
