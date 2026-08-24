@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TrainingApp.Api.Domain;
 
 public enum WorkoutStatus { Planned, InProgress, Completed, Skipped }
@@ -78,6 +80,7 @@ public sealed class SetEntry
     public string? Notes { get; set; }
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public long Version { get; set; } = 1;
+    [NotMapped] public bool IsRepRecord { get; set; }
 }
 
 public sealed class WorkoutTemplate

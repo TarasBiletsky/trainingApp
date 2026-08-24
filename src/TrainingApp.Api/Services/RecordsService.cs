@@ -13,6 +13,25 @@ public static class RecordsService
         var sets = await db.SetEntries.Where(x => x.WorkoutExercise!.ExerciseId == exerciseId && x.WorkoutExercise.Workout!.OwnerId == ownerId && x.Status == SetStatus.Completed && !x.IsWarmup && x.ActualWeightKg != null && x.ActualReps != null).AsNoTracking().ToListAsync(ct);
         return new RecordsResponse(sets.MaxBy(x => x.ActualWeightKg)?.ActualWeightKg, sets.GroupBy(x => x.ActualWeightKg).Select(g => new RepsAtWeight(g.Key, g.Max(x => x.ActualReps))).OrderByDescending(x => x.WeightKg).ToList(), sets.Count == 0 ? null : sets.Max(x => EpleyOneRepMax(x.ActualWeightKg!.Value, x.ActualReps!.Value)));
     }
+
+    public static async Task MarkRepRecordsAsync(AppDbContext db, Workout workout, CancellationToken ct)
+    {
+        var current = workout.Exercises.SelectMany(e => e.Sets.Where(s => s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new RepSet(s, e.ExerciseId))).ToList();
+        if (current.Count == 0) return;
+
+        var exerciseIds = current.Select(x => x.ExerciseId).Distinct().ToList();
+        var prior = await db.SetEntries.Where(s => exerciseIds.Contains(s.WorkoutExercise!.ExerciseId) && s.WorkoutExercise.Workout!.OwnerId == workout.OwnerId && s.WorkoutExercise.Workout.ScheduledAt < workout.ScheduledAt && s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new { s.WorkoutExercise!.ExerciseId, WeightKg = s.ActualWeightKg!.Value, Reps = s.ActualReps!.Value }).AsNoTracking().ToListAsync(ct);
+        var priorBest = prior.GroupBy(x => (x.ExerciseId, x.WeightKg)).ToDictionary(g => g.Key, g => g.Max(x => x.Reps));
+
+        foreach (var group in current.GroupBy(x => (x.ExerciseId, WeightKg: x.Set.ActualWeightKg!.Value)))
+        {
+            var best = group.Max(x => x.Set.ActualReps!.Value);
+            if (priorBest.TryGetValue(group.Key, out var previous) && best > previous)
+                foreach (var item in group.Where(x => x.Set.ActualReps == best)) item.Set.IsRepRecord = true;
+        }
+    }
+
+    private sealed record RepSet(SetEntry Set, Guid ExerciseId);
 }
 
 public sealed record RecordsResponse(

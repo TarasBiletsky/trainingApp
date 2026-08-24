@@ -151,6 +151,8 @@ public class WebInterfaceTests
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
         Assert.Contains("aria-label=\"Toggle weight sign\"", html);
         Assert.Contains("input.value=String(-Number(input.value))", html);
+        Assert.Contains("s.isRepRecord?'rep-record':''", html);
+        Assert.Contains(".set-editor.rep-record", html);
     }
 
     [Fact]

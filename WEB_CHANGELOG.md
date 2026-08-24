@@ -47,6 +47,7 @@
 - Workout sets can optionally record failure, 1–2 reps in reserve, or 3–4 reps in reserve.
 - Skipped workouts can optionally record and display a reason.
 - Workout weights can be toggled negative for assisted exercises.
+- Completed sets that beat the previous repetition best at the same exercise and weight receive a subtle red highlight.
 
 ## Deferred iOS parity
 
@@ -58,3 +59,4 @@
 - Add the optional set-effort selector to iOS workout logging.
 - Add the optional workout skip-reason prompt to iOS.
 - Add negative assisted-weight entry to iOS workout logging.
+- Add repetition-record highlighting to iOS workout logging.
