@@ -149,6 +149,8 @@ public class WebInterfaceTests
         Assert.Contains(".effort-menu button{display:block;width:100%;padding:9px;text-align:left;background:transparent;border:0;color:#f4f6f5}", html);
         Assert.Contains("document.querySelectorAll('.effort-picker[open]')", html);
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
+        Assert.Contains("aria-label=\"Toggle weight sign\"", html);
+        Assert.Contains("input.value=String(-Number(input.value))", html);
     }
 
     [Fact]
