@@ -48,6 +48,7 @@
 - Skipped workouts can optionally record and display a reason.
 - Workout weights can be toggled negative for assisted exercises.
 - Completed sets that establish a new weight-and-repetition record receive a red highlight; a set is a record when no set at the same or greater weight has matched or exceeded its repetitions.
+- The set-effort indicator sits to the left of the completion check, keeping the check as the rightmost control.
 
 ## Deferred iOS parity
 
