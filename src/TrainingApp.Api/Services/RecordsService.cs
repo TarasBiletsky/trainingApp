@@ -21,14 +21,9 @@ public static class RecordsService
 
         var exerciseIds = current.Select(x => x.ExerciseId).Distinct().ToList();
         var prior = await db.SetEntries.Where(s => exerciseIds.Contains(s.WorkoutExercise!.ExerciseId) && s.WorkoutExercise.Workout!.OwnerId == workout.OwnerId && s.WorkoutExercise.Workout.ScheduledAt < workout.ScheduledAt && s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new { s.WorkoutExercise!.ExerciseId, WeightKg = s.ActualWeightKg!.Value, Reps = s.ActualReps!.Value }).AsNoTracking().ToListAsync(ct);
-        var priorBest = prior.GroupBy(x => (x.ExerciseId, x.WeightKg)).ToDictionary(g => g.Key, g => g.Max(x => x.Reps));
-
-        foreach (var group in current.GroupBy(x => (x.ExerciseId, WeightKg: x.Set.ActualWeightKg!.Value)))
-        {
-            var best = group.Max(x => x.Set.ActualReps!.Value);
-            if (priorBest.TryGetValue(group.Key, out var previous) && best > previous)
-                foreach (var item in group.Where(x => x.Set.ActualReps == best)) item.Set.IsRepRecord = true;
-        }
+        foreach (var item in current)
+            item.Set.IsRepRecord = !prior.Any(x => x.ExerciseId == item.ExerciseId && x.WeightKg >= item.Set.ActualWeightKg && x.Reps >= item.Set.ActualReps)
+                && !current.Any(x => x.ExerciseId == item.ExerciseId && (x.Set.ActualWeightKg > item.Set.ActualWeightKg && x.Set.ActualReps >= item.Set.ActualReps || x.Set.ActualWeightKg >= item.Set.ActualWeightKg && x.Set.ActualReps > item.Set.ActualReps));
     }
 
     private sealed record RepSet(SetEntry Set, Guid ExerciseId);

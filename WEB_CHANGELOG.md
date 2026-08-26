@@ -47,7 +47,7 @@
 - Workout sets can optionally record failure, 1–2 reps in reserve, or 3–4 reps in reserve.
 - Skipped workouts can optionally record and display a reason.
 - Workout weights can be toggled negative for assisted exercises.
-- Completed sets that beat the previous repetition best at the same exercise and weight receive a subtle red highlight.
+- Completed sets that establish a new weight-and-repetition record receive a red highlight; a set is a record when no set at the same or greater weight has matched or exceeded its repetitions.
 
 ## Deferred iOS parity
 
