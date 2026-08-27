@@ -49,6 +49,7 @@
 - Workout weights can be toggled negative for assisted exercises.
 - Completed sets that establish a new weight-and-repetition record receive a red highlight; a set is a record when no set at the same or greater weight has matched or exceeded its repetitions.
 - The set-effort indicator sits to the left of the completion check, keeping the check as the rightmost control.
+- Exercise settings can enable negative assistance weights and double-weight volume for paired dumbbells or unilateral sides; negative assistance contributes positive volume.
 
 ## Deferred iOS parity
 
@@ -61,3 +62,4 @@
 - Add the optional workout skip-reason prompt to iOS.
 - Add negative assisted-weight entry to iOS workout logging.
 - Add repetition-record highlighting to iOS workout logging.
+- Port exercise weight options and positive-volume handling for assisted weights to iOS.

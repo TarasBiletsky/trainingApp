@@ -151,6 +151,11 @@ public class WebInterfaceTests
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
         Assert.Contains("aria-label=\"Toggle weight sign\"", html);
         Assert.Contains("input.value=String(-Number(input.value))", html);
+        Assert.Contains("x?.allowsNegativeWeight?'':'min=\"0\"'", html);
+        Assert.Contains("x?.allowsNegativeWeight?`<button type=\"button\" aria-label=\"Toggle weight sign\"", html);
+        Assert.Contains("Enable negative weight values", html);
+        Assert.Contains("Count weight as double for statistics", html);
+        Assert.Contains("countWeightAsDouble:countWeightAsDouble.checked", html);
         Assert.Contains("s.isRepRecord?'rep-record':''", html);
         Assert.Contains(".set-editor.rep-record", html);
     }

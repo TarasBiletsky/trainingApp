@@ -11,6 +11,13 @@ namespace TrainingApp.Tests;
 
 public sealed class SyncSetRulesTests
 {
+    [Fact] public void NegativeWeightRequiresExerciseOptIn()
+    {
+        var exercise = new Exercise { Name = "Pull Up", MuscleGroup = "Back", Equipment = "Assisted machine" };
+        Assert.False(ExerciseRules.Accepts(exercise, null, -20));
+        exercise.AllowsNegativeWeight = true;
+        Assert.True(ExerciseRules.Accepts(exercise, null, -20));
+    }
     private static readonly DateTimeOffset Now = new(2026, 7, 30, 12, 0, 0, TimeSpan.Zero);
 
     [Fact] public void Completed_UsesOfflineUtcTimestamp() { var requested = Now.AddHours(-2); Assert.Equal(requested, SyncSetRules.CompletionTime(SetStatus.Completed, requested, Now)); }

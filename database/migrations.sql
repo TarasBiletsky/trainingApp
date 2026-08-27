@@ -1007,3 +1007,88 @@ BEGIN
     END IF;
 END $EF$;
 COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    ALTER TABLE training."Exercises" ADD "AllowsNegativeWeight" boolean NOT NULL DEFAULT FALSE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    ALTER TABLE training."Exercises" ADD "CountWeightAsDouble" boolean NOT NULL DEFAULT FALSE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    UPDATE training."Exercises"
+    SET "AllowsNegativeWeight" = TRUE
+    WHERE "Name" IN ('Dips', 'Pull Up', 'Revers Grip Pull Up', 'Rope Pull Up');
+
+    UPDATE training."Exercises"
+    SET "CountWeightAsDouble" = TRUE
+    WHERE "Name" IN (
+        'Cable Crossover',
+        'Cable Lateral Raise',
+        'Dumbbell Concentration Curl',
+        'Dumbbell Curl',
+        'Dumbbell Hammer Curl',
+        'Dumbbell Row',
+        'Flat Dumbbell Bench Press',
+        'Flat Dumbbell Fly',
+        'Incline Dumbbell Bench Press',
+        'Incline Dumbbell Fly',
+        'Lateral Dumbbell Raise',
+        'Rear Delt Cable Fly',
+        'Seated Dumbbell Press',
+        'Single-Arm Cable Row'
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    UPDATE training."Exercises" SET "AllowsNegativeWeight" = FALSE, "CountWeightAsDouble" = FALSE
+    WHERE "Id" = '11111111-1111-1111-1111-111111111111';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    UPDATE training."Exercises" SET "AllowsNegativeWeight" = FALSE, "CountWeightAsDouble" = FALSE
+    WHERE "Id" = '22222222-2222-2222-2222-222222222222';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    UPDATE training."Exercises" SET "AllowsNegativeWeight" = FALSE, "CountWeightAsDouble" = FALSE
+    WHERE "Id" = '33333333-3333-3333-3333-333333333333';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    UPDATE training."Exercises" SET "AllowsNegativeWeight" = FALSE, "CountWeightAsDouble" = FALSE
+    WHERE "Id" = '44444444-4444-4444-4444-444444444444';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM public."__EFMigrationsHistory" WHERE "MigrationId" = '20260826135932_AddExerciseWeightOptions') THEN
+    INSERT INTO public."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260826135932_AddExerciseWeightOptions', '10.0.4');
+    END IF;
+END $EF$;
+COMMIT;

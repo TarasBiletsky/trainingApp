@@ -18,6 +18,8 @@ public sealed class Exercise
     public string? LicenseName { get; set; }
     public string? LicenseUrl { get; set; }
     public string? SourceAuthor { get; set; }
+    public bool AllowsNegativeWeight { get; set; }
+    public bool CountWeightAsDouble { get; set; }
     public bool IsArchived { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
