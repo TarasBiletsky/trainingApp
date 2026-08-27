@@ -2,6 +2,26 @@
 
 TrainingApp contains the self-hosted backend, native iOS application area, tests, deployment files, and the shared API handoff. The backend targets .NET 10 LTS, ASP.NET Core, EF Core, and PostgreSQL. The native iOS contract is `/api/v1`; `/` is the browser administration interface. Swagger UI is at `/swagger`.
 
+## Canonical server location and database
+
+Agents must use this repository path when maintaining exercises or composing workouts:
+
+```text
+S:\Home Server\Projects\TrainingApp
+```
+
+- `database\migrations.sql` contains the checked-in schema and seed migration; it is not the live database.
+- The live PostgreSQL database is the Docker volume `trainingapp_training-postgres`, stored inside Docker Desktop's data disk under `S:\Home Server\Docker`.
+- Query or update the live database through the application/API or `docker compose exec db ...`. Never open or modify `docker_data.vhdx` directly.
+- Before schema changes or bulk workout/exercise edits, create a logical PostgreSQL backup as described in **Backup and restore**.
+
+Start an agent or terminal session from the canonical repository:
+
+```powershell
+Set-Location 'S:\Home Server\Projects\TrainingApp'
+docker compose ps
+```
+
 ## Repository layout
 
 - `src/TrainingApp.Api` — backend API and browser administration UI.
