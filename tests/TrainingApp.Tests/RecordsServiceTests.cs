@@ -23,6 +23,15 @@ public sealed class RecordsServiceTests
         Assert.False(current.Exercises[0].Sets[3].IsRepRecord);
         Assert.False(current.Exercises[0].Sets[4].IsRepRecord);
     }
+    [Fact] public async Task RepRecord_RemainsMarkedWhenALaterSetImprovesIt()
+    {
+        await using var db = Db(); var owner = Guid.NewGuid(); var exercise = new Exercise { Name = "Press", MuscleGroup = "Chest", Equipment = "Barbell" }; var workout = new Workout { OwnerId = owner, Name = "Current", ScheduledAt = DateTimeOffset.UtcNow, Exercises = [new WorkoutExercise { ExerciseId = exercise.Id, Order = 1, Sets = [new SetEntry { Order = 1, Status = SetStatus.Completed, ActualWeightKg = 100, ActualReps = 2 }, new SetEntry { Order = 2, Status = SetStatus.Completed, ActualWeightKg = 105, ActualReps = 2 }] }] };
+
+        await RecordsService.MarkRepRecordsAsync(db, workout, default);
+
+        Assert.True(workout.Exercises[0].Sets[0].IsRepRecord);
+        Assert.True(workout.Exercises[0].Sets[1].IsRepRecord);
+    }
     [Fact] public async Task Records_UseActualValuesAndIgnorePlansAndWarmups()
     {
         await using var db = Db(); var owner = Guid.NewGuid(); var exercise = new Exercise { Name="Test", MuscleGroup="Chest", Equipment="Barbell" }; var workout = new Workout { OwnerId=owner, Name="Day", ScheduledAt=DateTimeOffset.UtcNow }; var we = new WorkoutExercise { Workout=workout, Exercise=exercise, Order=1 };

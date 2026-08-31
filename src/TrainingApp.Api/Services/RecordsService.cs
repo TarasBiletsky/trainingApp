@@ -16,17 +16,20 @@ public static class RecordsService
 
     public static async Task MarkRepRecordsAsync(AppDbContext db, Workout workout, CancellationToken ct)
     {
-        var current = workout.Exercises.SelectMany(e => e.Sets.Where(s => s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new RepSet(s, e.ExerciseId))).ToList();
+        var current = workout.Exercises.SelectMany(e => e.Sets.Where(s => s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new RepSet(s, e.ExerciseId, e.Order))).OrderBy(x => x.Set.CompletedAt ?? DateTimeOffset.MaxValue).ThenBy(x => x.ExerciseOrder).ThenBy(x => x.Set.Order).ToList();
         if (current.Count == 0) return;
 
         var exerciseIds = current.Select(x => x.ExerciseId).Distinct().ToList();
-        var prior = await db.SetEntries.Where(s => exerciseIds.Contains(s.WorkoutExercise!.ExerciseId) && s.WorkoutExercise.Workout!.OwnerId == workout.OwnerId && s.WorkoutExercise.Workout.ScheduledAt < workout.ScheduledAt && s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new { s.WorkoutExercise!.ExerciseId, WeightKg = s.ActualWeightKg!.Value, Reps = s.ActualReps!.Value }).AsNoTracking().ToListAsync(ct);
+        var prior = await db.SetEntries.Where(s => exerciseIds.Contains(s.WorkoutExercise!.ExerciseId) && s.WorkoutExercise.Workout!.OwnerId == workout.OwnerId && s.WorkoutExercise.Workout.ScheduledAt < workout.ScheduledAt && s.Status == SetStatus.Completed && !s.IsWarmup && s.ActualWeightKg != null && s.ActualReps > 0).Select(s => new RepResult(s.WorkoutExercise!.ExerciseId, s.ActualWeightKg!.Value, s.ActualReps!.Value)).AsNoTracking().ToListAsync(ct);
         foreach (var item in current)
-            item.Set.IsRepRecord = !prior.Any(x => x.ExerciseId == item.ExerciseId && x.WeightKg >= item.Set.ActualWeightKg && x.Reps >= item.Set.ActualReps)
-                && !current.Any(x => x.ExerciseId == item.ExerciseId && (x.Set.ActualWeightKg > item.Set.ActualWeightKg && x.Set.ActualReps >= item.Set.ActualReps || x.Set.ActualWeightKg >= item.Set.ActualWeightKg && x.Set.ActualReps > item.Set.ActualReps));
+        {
+            item.Set.IsRepRecord = !prior.Any(x => x.ExerciseId == item.ExerciseId && x.WeightKg >= item.Set.ActualWeightKg && x.Reps >= item.Set.ActualReps);
+            prior.Add(new RepResult(item.ExerciseId, item.Set.ActualWeightKg!.Value, item.Set.ActualReps!.Value));
+        }
     }
 
-    private sealed record RepSet(SetEntry Set, Guid ExerciseId);
+    private sealed record RepSet(SetEntry Set, Guid ExerciseId, int ExerciseOrder);
+    private sealed record RepResult(Guid ExerciseId, decimal WeightKg, int Reps);
 }
 
 public sealed record RecordsResponse(
