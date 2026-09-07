@@ -145,6 +145,8 @@ public class WebInterfaceTests
         Assert.Contains("deleteBySwipe=event.type==='touchend'&&drag.swiping&&drag.swipeX>=80", html);
         Assert.Contains("aria-label=\"Set effort: ${effortLabel(s.effort)}\"", html);
         Assert.Contains("input[aria-label=\"Weight kg\"]", html);
+        Assert.Contains("document.addEventListener('pointerdown'", html);
+        Assert.DoesNotContain("document.addEventListener('focusin'", html);
         Assert.Contains("replace(',','.')", html);
         Assert.Contains("<i class=\"failure\"></i>Failure", html);
         Assert.Contains("<i class=\"near\"></i>1–2 reps left", html);

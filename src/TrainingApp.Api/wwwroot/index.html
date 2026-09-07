@@ -51,7 +51,7 @@
 <script>
 const api='/api/v1',exerciseCategories=['Back','Chest','Triceps','Biceps','Legs','Shoulders'];let me,activeWorkout,workoutEditMode=false,workoutDate=new Date(),draftWorkoutAt=new Date(),exerciseCache=[],exerciseReplacementCache=[],templateCache=[],libraryCache=[],libraryOffset=0,libraryCount=0,calendarDate=new Date(),calendarView='week',exercisePickerTarget=null,exercisePickerCategory='All',exercisePickerTab='all',progressState=null,selectedProgressWeek=null,editingExerciseId=null;
 calendarDate.setHours(0,0,0,0);
-document.addEventListener('focusin',event=>{if(event.target.matches?.('input[aria-label="Weight kg"]'))event.target.type='text'});
+document.addEventListener('pointerdown',event=>{if(event.target.matches?.('input[aria-label="Weight kg"]'))event.target.type='text'});
 async function request(path,options={}){let r=await fetch(api+path,options);if(r.status===401){login.hidden=false;app.hidden=true;throw Error('Please sign in')};if(!r.ok){let x=await r.json().catch(()=>({}));throw Error(x.error||`Error ${r.status}`)}return r.status===204?null:r.json()}
 async function run(fn){message.textContent='';try{return await fn()}catch(e){message.textContent=e.message}}
 async function signIn(event){event?.preventDefault();await run(async()=>{await request('/auth/login?web=true',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({userName:user.value,password:pass.value})});await init()})}
