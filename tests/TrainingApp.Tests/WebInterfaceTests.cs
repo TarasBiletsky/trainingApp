@@ -127,6 +127,7 @@ public class WebInterfaceTests
         Assert.Contains(".calendar.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))", html);
         Assert.Contains("aria-label=\"Previous period\"", html);
         Assert.Contains("aria-label=\"Next period\"", html);
+        Assert.Contains("calendarDate.setHours(0,0,0,0)", html);
     }
 
     [Fact]
