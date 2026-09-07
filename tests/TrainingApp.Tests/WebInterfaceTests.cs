@@ -144,6 +144,8 @@ public class WebInterfaceTests
         Assert.Contains("plannedReps:num(document.getElementById('p'+id)?.value)", html);
         Assert.Contains("deleteBySwipe=event.type==='touchend'&&drag.swiping&&drag.swipeX>=80", html);
         Assert.Contains("aria-label=\"Set effort: ${effortLabel(s.effort)}\"", html);
+        Assert.Contains("input[aria-label=\"Weight kg\"]", html);
+        Assert.Contains("replace(',','.')", html);
         Assert.Contains("<i class=\"failure\"></i>Failure", html);
         Assert.Contains("<i class=\"near\"></i>1–2 reps left", html);
         Assert.Contains("<i class=\"reserve\"></i>3–4 reps left", html);
@@ -151,7 +153,7 @@ public class WebInterfaceTests
         Assert.Contains("document.querySelectorAll('.effort-picker[open]')", html);
         Assert.Contains("effort:document.getElementById('e'+id)?.value||null", html);
         Assert.Contains("aria-label=\"Toggle weight sign\"", html);
-        Assert.Contains("input.value=String(-Number(input.value))", html);
+        Assert.Contains("input.value=String(-value)", html);
         Assert.Contains("x?.allowsNegativeWeight?'':'min=\"0\"'", html);
         Assert.Contains("x?.allowsNegativeWeight?`<button type=\"button\" aria-label=\"Toggle weight sign\"", html);
         Assert.Contains("Enable negative weight values", html);

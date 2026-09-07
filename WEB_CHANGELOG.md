@@ -2,6 +2,7 @@
 
 ## Current
 
+- Workout weight fields accept decimal values written with either a period or a comma.
 - Calendar week and month queries now include workouts scheduled earlier on the first displayed day.
 - Responsive navigation now uses a fixed 56 px mobile header with a left-side drawer, a 232 px desktop sidebar, and a 72 px compact tablet rail; the redundant page-level logo and slogan are removed.
 - Workout exercise actions are grouped under an overflow menu; mobile set rows use labelled SET, KG, REPS, and DONE columns without destructive buttons.
